@@ -2,21 +2,40 @@
   "name": "physioclient2",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
+  "main": "public/electron.js",
   "dependencies": {
     "@types/jest": "24.0.14",
     "@types/node": "12.0.8",
     "@types/react": "16.8.20",
     "@types/react-dom": "16.8.4",
+    "@types/react-redux": "^7.1.0",
+    "@types/redux": "^3.6.0",
+    "@typescript-eslint/eslint-plugin": "^1.10.2",
+    "@typescript-eslint/parser": "^1.10.2",
+    "electron-is-dev": "^1.1.0",
+    "electron-log": "^3.0.6",
+    "electron-updater": "^4.0.6",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-react": "^7.13.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
     "react-scripts": "3.0.1",
+    "redux": "^4.0.1",
     "typescript": "3.5.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
+    "eject": "react-scripts eject",
+    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "npm run build",
+    "electron-pack": "build -mw"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -31,6 +50,51 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@rescripts/cli": "0.0.10",
+    "@rescripts/rescript-env": "0.0.10",
+    "concurrently": "^4.1.0",
+    "electron": "^5.0.3",
+    "electron-builder": "^20.43.0",
+    "husky": "^2.4.1",
+    "lint-staged": "^8.2.1",
+    "prettier": "1.18.2",
+    "wait-on": "^3.2.0"
+  },
+  "build": {
+    "appId": "com.physio.physio-client-2",
+    "productName": "Physio Client 2",
+    "copyright": "Copyright © 2019",
+    "mac": {
+      "category": "public.app-category.medical",
+      "icon": "icon.hqx",
+      "publish": [
+        {
+          "provider": "s3",
+          "bucket": "physio-client-2",
+          "region": "eu-west-1"
+        }
+      ]
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{tsx,js,css,json,md}": [
+      "prettier --write",
+      "git add"
     ]
   }
 }
