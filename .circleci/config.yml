@@ -2,15 +2,18 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:12.4
+      - image: electronuserland/builder:wine
     steps:
       - checkout
+      - run:
+          name: Install node
+          command: npm i -g n && n 12.4
       - restore_cache:
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
-            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
-            - node-v1-{{ .Branch }}-
-            - node-v1-
+            - node-v2-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v2-{{ .Branch }}-
+            - node-v2-
       - run:
           name: Install Dependices
           command: npm install
@@ -20,7 +23,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          key: node-v2-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run:
           name: Build Electron Packages
           command: npm run electron-pack
