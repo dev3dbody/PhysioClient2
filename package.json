@@ -1,6 +1,6 @@
 {
   "name": "physioclient2",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "private": true,
   "homepage": "./",
   "main": "public/electron.js",
@@ -13,6 +13,7 @@
     "@types/redux": "^3.6.0",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
+    "dotenv-cli": "^2.0.0",
     "electron-is-dev": "^1.1.0",
     "electron-log": "^3.0.6",
     "electron-updater": "^4.0.6",
@@ -34,6 +35,7 @@
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
+    "dist": "electron-builder --mac --win --publish always ",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw"
   },
@@ -59,6 +61,7 @@
     "electron": "^5.0.3",
     "electron-builder": "^20.43.0",
     "husky": "^2.4.1",
+    "json": "^9.0.6",
     "lint-staged": "^8.2.1",
     "prettier": "1.18.2",
     "wait-on": "^3.2.0"
@@ -67,6 +70,15 @@
     "appId": "com.physio.physio-client-2",
     "productName": "Physio Client 2",
     "copyright": "Copyright © 2019",
+    "linux": {
+      "publish": [
+        {
+          "provider": "s3",
+          "bucket": "physio-client-2",
+          "region": "eu-central-1"
+        }
+      ]
+    },
     "mac": {
       "category": "public.app-category.medical",
       "icon": "icon.hqx",
@@ -74,7 +86,16 @@
         {
           "provider": "s3",
           "bucket": "physio-client-2",
-          "region": "eu-west-1"
+          "region": "eu-central-1"
+        }
+      ]
+    },
+    "win": {
+      "publish": [
+        {
+          "provider": "s3",
+          "bucket": "physio-client-2",
+          "region": "eu-central-1"
         }
       ]
     },
