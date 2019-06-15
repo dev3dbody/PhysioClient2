@@ -35,7 +35,7 @@
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
-    "dist": "electron-builder --mac dmg --win nsis --publish always ",
+    "dist": "electron-builder --mac zip --win nsis --publish always",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw"
   },
@@ -80,6 +80,7 @@
       ]
     },
     "mac": {
+      "target": "zip",
       "category": "public.app-category.medical",
       "icon": "icon.hqx",
       "publish": [
