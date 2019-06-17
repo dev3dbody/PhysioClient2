@@ -1,24 +1,22 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { CSSProperties } from "react";
+import Switch from "./components/Switch";
+import Navigation from "./components/Navigation";
 
-const App: React.FC = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Edit <code>src/App.tsx</code> and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header>
-  </div>
+const style = {
+  display: "flex" /* establish flex container */,
+  flexDirection: "column" /* make main axis vertical */,
+  justifyContent: "center" /* center items vertically, in this case */,
+  alignItems: "center" /* center items horizontally, in this case */,
+  height: "90vmin"
+} as CSSProperties;
+
+const App: React.FunctionComponent = () => (
+  <>
+    <Navigation />
+    <div style={style}>
+      <Switch />
+    </div>
+  </>
 );
 
 export default App;
