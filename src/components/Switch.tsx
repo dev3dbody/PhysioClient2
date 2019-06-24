@@ -11,8 +11,6 @@ import { getScreen } from "../redux/reducers";
 const Switch: React.FunctionComponent = () => {
   const screen = useSelector(getScreen);
   switch (screen) {
-    case "MAIN":
-      return <Main />;
     case "PATIENT":
       return <Patient />;
     case "ADD_PATIENT":
