@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table, Button, Header, Icon, Segment } from "semantic-ui-react";
 import { useSelector, useDispatch } from "react-redux";
 import { getPatients } from "../../redux/reducers";
-import { edit, navigate } from "../../redux/actions";
+import { edit, navigate, listRequest } from "../../redux/actions";
 
 const Patient: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patients = useSelector(getPatients);
+
+  useEffect(() => {
+    dispatch(listRequest("patients"));
+  }, [dispatch]);
 
   if (!patients.length) {
     return (
