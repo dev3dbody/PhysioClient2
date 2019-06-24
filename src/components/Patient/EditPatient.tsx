@@ -4,7 +4,7 @@ import { Form } from "semantic-ui-react";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
-import { createRequest, updateRequest } from "../../redux/actions";
+import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 
 const EditPatient: React.FunctionComponent<{}> = () => {
@@ -61,7 +61,12 @@ const EditPatient: React.FunctionComponent<{}> = () => {
         placeholder="Inne informacje"
         onChange={(_, data) => handleChange("comment", data.value)}
       />
-      <Form.Button onClick={handleSubmit}>Submit</Form.Button>
+      <Form.Button onClick={() => dispatch(navigate("PATIENT"))}>
+        Anuluj
+      </Form.Button>
+      <Form.Button primary onClick={handleSubmit}>
+        Zapisz
+      </Form.Button>
     </Form>
   );
 };
