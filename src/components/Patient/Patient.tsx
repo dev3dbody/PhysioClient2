@@ -1,12 +1,31 @@
 import React from "react";
-import { Table, Button } from "semantic-ui-react";
+import { Table, Button, Header, Icon, Segment } from "semantic-ui-react";
 import { useSelector, useDispatch } from "react-redux";
 import { getPatients } from "../../redux/reducers";
-import { edit } from "../../redux/actions";
+import { edit, navigate } from "../../redux/actions";
 
 const Patient: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patients = useSelector(getPatients);
+
+  if (!patients.length) {
+    return (
+      <Segment placeholder>
+        <Header icon>
+          <Icon name="user md" />
+          Jeszcze nie zarejestrowano żadnego pacjenta
+        </Header>
+        <Button
+          icon="user add"
+          primary
+          onClick={() => dispatch(navigate("ADD_PATIENT"))}
+        >
+          Dodaj pacjenta
+        </Button>
+      </Segment>
+    );
+  }
+
   return (
     <Table celled>
       <Table.Header>
