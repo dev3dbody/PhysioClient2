@@ -1,37 +1,34 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getScreen } from "../redux/reducers";
-import { Breadcrumb } from "semantic-ui-react";
+import { Input, Menu } from "semantic-ui-react";
 import { navigate } from "../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { getScreen } from "../redux/reducers";
+import { IScreen } from "../redux/reducers/screen";
 
 const Navigation: React.FunctionComponent = () => {
-  const screen = useSelector(getScreen);
+  const activeScreen = useSelector(getScreen);
   const dispatch = useDispatch();
-  const sections = [
-    {
-      key: "MAIN",
-      content: "Widok główny",
-      onClick: () => dispatch(navigate("MAIN"))
-    }
+  const items = [
+    { name: "Pacjenci", action: "PATIENT" as IScreen },
+    { name: "Wizyty", action: "APPOINTMENT" as IScreen }
   ];
 
-  if (screen === "PATIENT") {
-    sections.push({
-      key: "PATIENT",
-      content: "Widok pacjentów",
-      onClick: () => dispatch(navigate("PATIENT"))
-    });
-  }
-
-  if (screen === "APPOINTMENT") {
-    sections.push({
-      key: "APPOINTMENT",
-      content: "Widok wizyt",
-      onClick: () => dispatch(navigate("APPOINTMENT"))
-    });
-  }
-
-  return <Breadcrumb size="massive" sections={sections} />;
+  return (
+    <Menu size="massive" pointing>
+      {items.map(({ name, action }: { name: string; action: IScreen }) => (
+        <Menu.Item
+          name={name}
+          active={activeScreen === action}
+          onClick={() => dispatch(navigate(action))}
+        />
+      ))}
+      <Menu.Menu position="right">
+        <Menu.Item>
+          <Input icon="search" placeholder="Szukaj..." />
+        </Menu.Item>
+      </Menu.Menu>
+    </Menu>
+  );
 };
 
 export default Navigation;
