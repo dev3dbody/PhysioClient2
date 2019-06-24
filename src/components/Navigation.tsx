@@ -8,7 +8,6 @@ import _ from "lodash";
 
 const Navigation: React.FunctionComponent = () => {
   const activeScreen = useSelector(getScreen);
-  console.info({ activeScreen });
   const dispatch = useDispatch();
   const items = [
     {

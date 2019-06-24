@@ -62,15 +62,32 @@ const database: Middleware = ({ dispatch }) => next => async (
   if (action.type === getType(listRequest)) {
     const { model }: { model: IModel } = action.payload;
     try {
-      const docs = await db[model].allDocs({
+      let docs = await db[model].allDocs({
         include_docs: true,
         attachments: model === 'scans',
       });
 
+      let rows = (docs.rows as any).map(({ doc }: { doc: any }) => doc)
+
+      if (action.payload.options && action.payload.options.sortBy) {
+        const sortBy = action.payload.options.sortBy;
+        rows = rows.sort((a: any, b: any) => {
+          if (model === 'patients') {
+            if (a[sortBy] > b[sortBy]) {
+              return 1;
+            }
+            if (a.surname < b.surname) {
+              return -1;
+            }
+          }
+          return 0;
+        })
+      }
+
       dispatch(
         listSuccess(
           model,
-          (docs.rows as any).map(({ doc }: { doc: any }) => doc),
+          rows,
         ),
       );
     } catch (err) {

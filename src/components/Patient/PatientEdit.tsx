@@ -7,10 +7,9 @@ import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 
-const EditPatient: React.FunctionComponent<{}> = () => {
+const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patient = useSelector(getCurrentPatient);
-  console.log(patient);
   const initValues = patient || {
     name: "",
     surname: "",
@@ -71,4 +70,4 @@ const EditPatient: React.FunctionComponent<{}> = () => {
   );
 };
 
-export default EditPatient;
+export default PatientEdit;
