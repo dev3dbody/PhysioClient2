@@ -4,22 +4,27 @@ import { navigate } from "../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { getScreen } from "../redux/reducers";
 import { IScreen } from "../redux/reducers/screen";
+import _ from "lodash";
 
 const Navigation: React.FunctionComponent = () => {
   const activeScreen = useSelector(getScreen);
+  console.info({ activeScreen });
   const dispatch = useDispatch();
   const items = [
-    { name: "Pacjenci", action: "PATIENT" as IScreen },
-    { name: "Wizyty", action: "APPOINTMENT" as IScreen }
+    {
+      name: "Pacjenci",
+      actions: ["PATIENT" as IScreen, "EDIT_PATIENT" as IScreen]
+    },
+    { name: "Wizyty", actions: ["APPOINTMENT" as IScreen] }
   ];
 
   return (
     <Menu size="massive" pointing>
-      {items.map(({ name, action }: { name: string; action: IScreen }) => (
+      {items.map(({ name, actions }: { name: string; actions: IScreen[] }) => (
         <Menu.Item
           name={name}
-          active={activeScreen === action}
-          onClick={() => dispatch(navigate(action))}
+          active={_.indexOf(actions, activeScreen) !== -1}
+          onClick={() => dispatch(navigate(actions[0] as IScreen))}
         />
       ))}
       <Menu.Menu position="right">
