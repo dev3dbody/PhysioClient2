@@ -1,5 +1,5 @@
 import { createReducer } from 'typesafe-actions';
-import { IAction, edit } from '../actions';
+import { IAction, edit, details } from '../actions';
 
 export interface ICurrent {
   patients: string | undefined;
@@ -15,6 +15,9 @@ const initCurrent = {
 
 const current = createReducer<ICurrent, IAction>(initCurrent).handleAction(
   edit,
+  (state, action) => ({ ...state, [action.payload.model]: action.payload.id }),
+).handleAction(
+  details,
   (state, action) => ({ ...state, [action.payload.model]: action.payload.id }),
 );
 

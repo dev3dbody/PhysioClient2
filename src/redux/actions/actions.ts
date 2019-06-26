@@ -50,3 +50,6 @@ export const removeFailure = createAction('REMOVE_FAILURE', action => {
 export const edit = createAction('EDIT', action => {
   return (model: IModel, id: string) => action({ model, id });
 });
+export const details = createAction('DETAILS', action => {
+  return (model: IModel, id: string) => action({ model, id });
+});

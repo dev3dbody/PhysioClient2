@@ -21,6 +21,7 @@ const Navigation: React.FunctionComponent = () => {
     <Menu size="massive" pointing>
       {items.map(({ name, actions }: { name: string; actions: IScreen[] }) => (
         <Menu.Item
+          key={name}
           name={name}
           active={_.indexOf(actions, activeScreen) !== -1}
           onClick={() => dispatch(navigate(actions[0] as IScreen))}
