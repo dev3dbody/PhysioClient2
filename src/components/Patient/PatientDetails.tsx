@@ -1,10 +1,12 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { Button, Dropdown, Header, Icon } from "semantic-ui-react";
+import { useDispatch, useSelector } from "react-redux";
+import { Segment, Button, Dropdown, Header, Icon } from "semantic-ui-react";
 import { getCurrentPatient } from "../../redux/reducers";
+import { edit, navigate } from "../../redux/actions";
 
 const PatientDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
+  const dispatch = useDispatch();
 
   if (!patient) {
     return null;
@@ -18,6 +20,10 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           Nowa wizyta
         </Button>
         <Dropdown
+          onChange={() => {
+            console.info("onc");
+            dispatch(edit("patients", patient._id));
+          }}
           primary
           className="button icon"
           options={[
@@ -33,6 +39,11 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           <Header.Subheader>Szczegóły Pacjenta</Header.Subheader>
         </Header.Content>
       </Header>
+      <Segment>TUTAJ DANE PACJENTA</Segment>
+      <Segment>TUTAJ OSTATNIE WIZYTY</Segment>
+      <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
+        <Icon name="arrow left" /> Wróć
+      </Button>
     </>
   );
 };
