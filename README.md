@@ -18,7 +18,7 @@ npm i
 To run the app for everyday job:
 
 ```bash
-npm electron-dev
+npm run electron-dev
 ```
 
 # Deployment
