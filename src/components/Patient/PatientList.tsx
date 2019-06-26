@@ -9,7 +9,7 @@ const PatientList: React.FunctionComponent<{}> = () => {
   const patients = useSelector(getPatients);
 
   useEffect(() => {
-    dispatch(listRequest("patients", { sortBy: "surnname" }));
+    dispatch(listRequest("patients"));
   }, [dispatch]);
 
   if (!patients.length) {
@@ -31,9 +31,20 @@ const PatientList: React.FunctionComponent<{}> = () => {
 
   return (
     <>
-      <Button primary onClick={() => dispatch(navigate("ADD_PATIENT"))}>
+      <Button
+        floated="right"
+        primary
+        onClick={() => dispatch(navigate("ADD_PATIENT"))}
+      >
         <Icon name="add user" /> Dodaj pacjenta
       </Button>
+      <Header as="h2">
+        <Icon name="group" />
+        <Header.Content>
+          Pacjenci
+          <Header.Subheader>{patients.length} rekordów</Header.Subheader>
+        </Header.Content>
+      </Header>
       <Table singleLine selectable padded>
         <Table.Header>
           <Table.Row>

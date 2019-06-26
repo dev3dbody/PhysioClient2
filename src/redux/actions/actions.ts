@@ -6,12 +6,8 @@ export const navigate = createAction('NAVIGATE', action => {
   return (screen: IScreen) => action(screen);
 });
 
-interface IListOptions {
-  sortBy?: string
-}
-
 export const listRequest = createAction('LIST_REQUEST', action => {
-  return (model: IModel, options?: IListOptions ) => action({ model, options });
+  return (model: IModel ) => action({ model });
 });
 export const createRequest = createAction('CREATE_REQUEST', action => {
   return (model: IModel, resource: INewResource) => action({ model, resource });

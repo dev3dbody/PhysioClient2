@@ -6,6 +6,7 @@ import * as fromLoading from './loading';
 import loading, { ILoading } from './loading';
 import * as fromCurrent from './current';
 import current, { ICurrent } from './current';
+import _ from 'lodash'
 
 export interface IState {
   screen: IScreen;
@@ -20,7 +21,8 @@ export default reducer;
 export const getScreen = (state: IState) => state.screen;
 
 export const getData = (state: IState) => state.data;
-export const getPatients = (state: IState) => fromData.getPatients(state.data);
+export const getPatients = (state: IState) =>
+  _.sortBy(fromData.getPatients(state.data), patient => patient.surname.toLowerCase());
 export const getPatientById = (state: IState, id: string) =>
   fromData.getPatientById(state.data, id);
 export const getPatientsCount = (state: IState) =>
