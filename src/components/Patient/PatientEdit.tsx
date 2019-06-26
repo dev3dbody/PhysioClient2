@@ -18,7 +18,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
   };
 
   const [values, setValues] = useState(initValues);
-  const handleChange = (field: string, value: string) =>
+  const handleChange = ({ field, value }: { field: string; value: any }) =>
     setValues(state => ({ ...state, [field]: value }));
 
   const handleSubmit = () =>
@@ -30,36 +30,59 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
 
   return (
     <Form>
-      <Form.Input
-        value={values.name}
-        fluid
-        label="Imię"
-        placeholder="Imię"
-        onChange={(_, data) => handleChange("name", data.value)}
-      />
-      <Form.Input
-        value={values.surname}
-        fluid
-        label="Nazwisko"
-        placeholder="Nazwisko"
-        onChange={(_, data) => handleChange("surname", data.value)}
-      />
-      <SemanticDatepicker
-        date={new Date(values.birthDate)}
-        type="basic"
-        onDateChange={newDate => {
-          if (newDate) {
-            handleChange("birthDate", newDate.toString());
-          }
-        }}
-      />
-      <Form.Input
-        value={values.comment}
-        fluid
-        label="Inne informacje"
-        placeholder="Inne informacje"
-        onChange={(_, data) => handleChange("comment", data.value)}
-      />
+      <Grid columns="3">
+        <Grid.Row divided>
+          <Grid.Column width="6">
+            <Form.Input
+              value={values.name}
+              fluid
+              label="Imię"
+              placeholder="Imię"
+              onChange={(_, data) =>
+                handleChange({ field: "name", value: data.value })
+              }
+            />
+          </Grid.Column>
+          <Grid.Column width="6">
+            <Form.Input
+              value={values.surname}
+              fluid
+              label="Nazwisko"
+              placeholder="Nazwisko"
+              onChange={(_, data) =>
+                handleChange({ field: "surname", value: data.value })
+              }
+            />
+          </Grid.Column>
+          <Grid.Column width="4">
+            <SemanticDatepicker
+              label="Data urodzenia"
+              date={new Date(values.birthDate)}
+              type="basic"
+              onDateChange={newDate => {
+                if (newDate) {
+                  handleChange({
+                    field: "birthDate",
+                    value: newDate.toString()
+                  });
+                }
+              }}
+            />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Column width="12">
+          <Form.TextArea
+            value={values.comment}
+            fluid
+            label="Inne informacje"
+            placeholder="Inne informacje"
+            onChange={(_, data) =>
+              handleChange({ field: "comment", value: data.value })
+            }
+          />
+        </Grid.Column>
+      </Grid>
+
       <Grid>
         <Grid.Row columns="2">
           <Grid.Column>
