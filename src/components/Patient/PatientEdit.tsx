@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Form } from "semantic-ui-react";
+import { Grid, Form, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
@@ -60,12 +60,26 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         placeholder="Inne informacje"
         onChange={(_, data) => handleChange("comment", data.value)}
       />
-      <Form.Button onClick={() => dispatch(navigate("PATIENT"))}>
-        Anuluj
-      </Form.Button>
-      <Form.Button primary onClick={handleSubmit}>
-        Zapisz
-      </Form.Button>
+      <Grid>
+        <Grid.Row columns="2">
+          <Grid.Column>
+            <Button.Group>
+              <Button onClick={handleSubmit} positive>
+                Zapisz
+              </Button>
+              <Button.Or text="lub" />
+              <Button onClick={() => dispatch(navigate("PATIENT"))}>
+                Anuluj
+              </Button>
+            </Button.Group>
+          </Grid.Column>
+          <Grid.Column textAlign="right">
+            <Button negative onClick={() => dispatch(navigate("PATIENT"))}>
+              <Icon name="trash" /> Usuń
+            </Button>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </Form>
   );
 };
