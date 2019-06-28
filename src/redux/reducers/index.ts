@@ -14,7 +14,7 @@ export interface IState {
   data: IData;
   loading: ILoading;
   current: ICurrent;
-  flashes: [IFlash];
+  flash: [IFlash];
 }
 
 const reducer = combineReducers({ screen, data, loading, current, flash });
@@ -78,4 +78,6 @@ export const getCurrentScan = (state: IState) => {
   }
   return undefined;
 };
-export const getFlashes = (state: IState) => state.flashes;
+export const getFlashes = (state: IState) => {
+  return state.flash
+};

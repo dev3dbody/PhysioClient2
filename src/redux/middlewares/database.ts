@@ -88,7 +88,7 @@ const database: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { id, rev } = await db[model].post(resource);
-      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }));
+      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }, { flash: { duration: 3000, text: 'Obiekt został zapisany' } }));
     } catch (err) {
       dispatch(createFailure(model, err));
     }

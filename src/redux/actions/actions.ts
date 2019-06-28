@@ -23,7 +23,9 @@ export const listSuccess = createAction('LIST_SUCCESS', action => {
   return (model: IModel, data: IResource[]) => action({ model, data });
 });
 export const createSuccess = createAction('CREATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource) => action({ model, resource });
+  return (model: IModel, resource: IResource, meta: any) => {
+    return action({ model, resource }, meta);
+  }
 });
 export const updateSuccess = createAction('UPDATE_SUCCESS', action => {
   return (model: IModel, resource: IResource) => action({ model, resource });

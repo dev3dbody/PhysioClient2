@@ -5,11 +5,19 @@ import { getFlashes } from "../redux/reducers";
 
 const Flash: React.FunctionComponent = () => {
   const flashes = useSelector(getFlashes);
+  if (!flashes) {
+    return null;
+  }
   // id, duration, type,
   return (
     <>
-      {flashes.map(({ text }) => (
-        <Message>
+      {flashes.map(({ type, text }) => (
+        <Message
+          info={type === "info"}
+          success={type === "success"}
+          error={type === "error"}
+          warning={type === "warning"}
+        >
           <p>{text}</p>
         </Message>
       ))}
