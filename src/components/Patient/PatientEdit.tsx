@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Grid, Form, Button, Icon } from "semantic-ui-react";
+import { Message, Grid, Form, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
+import Validator from "../../lib/validator";
+import _ from "lodash";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
@@ -16,10 +18,29 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
     birthDate: "",
     comment: ""
   };
+  const validator = new Validator({
+    name: [
+      {
+        test: value => value.length > 1,
+        message: "Imię musi mieć przynajmniej dwa znaki"
+      }
+    ],
+    surname: [
+      {
+        test: value => value.length > 1,
+        message: "Nazwisko musi mieć przynajmniej dwa znaki"
+      }
+    ]
+  });
 
-  const [values, setValues] = useState(initValues);
-  const handleChange = (field: string, value: string) =>
-    setValues(state => ({ ...state, [field]: value }));
+  const [values, setValues] = useState({
+    errors: { name: "", surname: "" },
+    ...initValues
+  });
+  const handleChange = async (field: string, value: string) => {
+    const errors = await validator.validate(values);
+    setValues(state => ({ ...state, [field]: value, errors }));
+  };
 
   const handleSubmit = () =>
     dispatch(
@@ -31,6 +52,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
   return (
     <Form>
       <Form.Input
+        error={!!values.errors.name}
         value={values.name}
         fluid
         label="Imię"
@@ -38,6 +60,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         onChange={(_, data) => handleChange("name", data.value)}
       />
       <Form.Input
+        error={!!values.errors.surname}
         value={values.surname}
         fluid
         label="Nazwisko"
@@ -80,6 +103,14 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      {!_.isEmpty(values.errors) && (
+        <Message negative>
+          <Message.Header>Formularz zawiera błedy</Message.Header>
+          {_.keys(values.errors).map(key => (
+            <p>{Reflect.get(values.errors, key)}</p>
+          ))}
+        </Message>
+      )}
     </Form>
   );
 };
