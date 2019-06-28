@@ -1,6 +1,6 @@
 {
   "name": "physioclient2",
-  "version": "0.1.1",
+  "version": "0.1.998",
   "private": true,
   "homepage": "./",
   "main": "public/electron.js",
@@ -44,7 +44,7 @@
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
-    "dist": "electron-builder --mac zip --win nsis --publish always",
+    "dist": "electron-builder --linux AppImage --mac zip --win nsis --publish always",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw "
   },
