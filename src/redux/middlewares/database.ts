@@ -88,7 +88,9 @@ const database: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { id, rev } = await db[model].post(resource);
-      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }, { flash: { duration: 3000, text: 'Obiekt został zapisany' } }));
+      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }, {
+        flash: { duration: 3000, type: "success", text: 'Obiekt został zapisany' }
+      }));
     } catch (err) {
       dispatch(createFailure(model, err));
     }
@@ -102,7 +104,9 @@ const database: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { rev } = await db[model].put(resource);
-      dispatch(updateSuccess(model, { ...resource, _rev: rev }));
+      dispatch(updateSuccess(model, { ...resource, _rev: rev }, {
+        flash: { duration: 3000, type: "success", text: 'Zmiany zostały zapisane' }
+      }));
     } catch (err) {
       dispatch(updateFailure(model, err));
     }
