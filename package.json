@@ -1,6 +1,6 @@
 {
   "name": "physioclient2",
-  "version": "0.1.998",
+  "version": "0.1.1",
   "private": true,
   "homepage": "./",
   "main": "public/electron.js",
