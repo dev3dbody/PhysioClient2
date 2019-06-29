@@ -6,18 +6,26 @@ import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
-import Validator from "../../lib/validator";
-import _ from "lodash";
+import { INewPatient } from "../../redux/reducers/data";
+import Validator, { IErrors } from "../../lib/validator";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patient = useSelector(getCurrentPatient);
-  const initValues = patient || {
+
+  let initValues: INewPatient = {
     name: "",
     surname: "",
     birthDate: "",
     comment: ""
   };
+  let _id: string = "";
+  let _rev: string = "";
+
+  if (patient !== undefined) {
+    ({ _id, _rev, ...initValues } = patient);
+  }
+
   const validator = new Validator({
     name: [
       {
@@ -33,42 +41,50 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
     ]
   });
 
-  const [values, setValues] = useState({
-    errors: { name: "", surname: "" },
-    ...initValues
+  type IFormState = {
+    values: INewPatient;
+    errors: IErrors;
+  };
+
+  const [fields, setFields] = useState({
+    errors: {} as IErrors,
+    values: initValues
   });
   const handleChange = async (field: string, value: string) => {
-    const errors = await validator.validate(values);
-    setValues(state => ({ ...state, [field]: value, errors }));
+    const errors = await validator.validate(fields.values);
+    setFields((state: IFormState) => ({
+      values: { ...state.values, [field]: value },
+      errors
+    }));
   };
 
   const handleSubmit = () =>
     dispatch(
-      patient
-        ? updateRequest("patients", values as any)
-        : createRequest("patients", values)
+      patient === undefined
+        ? createRequest("patients", fields.values)
+        : updateRequest("patients", { _id, _rev, ...fields.values })
     );
 
   return (
     <Form>
       <Form.Input
-        error={!!values.errors.name}
-        value={values.name}
+        error={!!fields.errors.name}
+        value={fields.values.name}
         fluid
         label="Imię"
         placeholder="Imię"
         onChange={(_, data) => handleChange("name", data.value)}
       />
       <Form.Input
-        error={!!values.errors.surname}
-        value={values.surname}
+        error={!!fields.errors.surname}
+        value={fields.values.surname}
         fluid
         label="Nazwisko"
         placeholder="Nazwisko"
         onChange={(_, data) => handleChange("surname", data.value)}
       />
       <SemanticDatepicker
-        date={new Date(values.birthDate)}
+        date={new Date(fields.values.birthDate)}
         type="basic"
         onDateChange={newDate => {
           if (newDate) {
@@ -77,7 +93,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         }}
       />
       <Form.Input
-        value={values.comment}
+        value={fields.values.comment}
         fluid
         label="Inne informacje"
         placeholder="Inne informacje"
@@ -103,11 +119,11 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      {!_.isEmpty(values.errors) && (
+      {Object.keys(fields.errors).length && (
         <Message negative>
           <Message.Header>Formularz zawiera błedy</Message.Header>
-          {_.keys(values.errors).map(key => (
-            <p>{Reflect.get(values.errors, key)}</p>
+          {Object.values(fields.errors).map(error => (
+            <p>{error}</p>
           ))}
         </Message>
       )}

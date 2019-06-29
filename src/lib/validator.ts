@@ -1,60 +1,74 @@
 import _ from 'lodash';
 import validator from 'validator';
 
-type Schema = {
-  [key: string]: [Test]
-}
-type TestResult = {
-  result: boolean,
-  message: string
-}
+type ISchema = {
+  [key: string]: [ITest];
+};
 
-type TestFunction = (value: string, data: Data) => boolean | TestResult
+type ITestResult = {
+  result: boolean;
+  message: string;
+};
 
-type Test = {
-  test: ValidatorJS.ValidatorStatic | TestFunction
-  message: string
-}
+type ITestFunction = (value: string, data: IData) => boolean | ITestResult;
 
-export type Errors = {
-  [key: string]: string
-}
+type ITest = {
+  test: ValidatorJS.ValidatorStatic | ITestFunction;
+  message: string;
+};
 
-type Data = {
-  [key: string]: any
-}
+export type IErrors = {
+  [key: string]: string;
+};
+
+type IData = {
+  [key: string]: any;
+};
 
 export default class Validator {
-  private readonly schema: Schema;
-  constructor (schema: Schema) {
-    this.schema = schema
+  private readonly schema: ISchema;
+  constructor(schema: ISchema) {
+    this.schema = schema;
   }
 
-  async validate (data: Data) {
-    const errors:Errors = {};
+  async validate(data: IData) {
+    const errors: IErrors = {};
     const keys = _.keys(this.schema);
     for (let i = 0; i < keys.length; i++) {
       const testResults = [];
       for (let t = 0; t < this.schema[keys[i]].length; t++) {
-        const testResult = await this.test(<TestFunction>this.schema[keys[i]][t].test, data[keys[i]], data);
+        const testResult = await this.test(
+          <ITestFunction>this.schema[keys[i]][t].test,
+          data[keys[i]],
+          data,
+        );
         if (!testResult || (_.isObject(testResult) && !testResult.result)) {
-          testResults.push(_.isObject(testResult) && testResult.message ? testResult.message : this.schema[keys[i]][t].message)
+          testResults.push(
+            _.isObject(testResult) && testResult.message
+              ? testResult.message
+              : this.schema[keys[i]][t].message,
+          );
         }
       }
       if (testResults.length) {
-        errors[keys[i]] = testResults[0]
+        errors[keys[i]] = testResults[0];
       }
     }
-    return errors
+    return errors;
   }
 
-  async test (test: TestFunction, value: any, data: Data):Promise<TestResult | boolean> {
+  async test(
+    test: ITestFunction,
+    value: any,
+    data: IData,
+  ): Promise<ITestResult | boolean> {
     if (_.isFunction(test)) {
       const result = await test(value, data);
-      return result
+      return result;
     }
 
-    // @ts-ignore
-    return validator[test](value)
+    type IValidatorTest=(input: any)=>boolean | ITestResult
+   
+    return (validator[test] as IValidatorTest)(value);
   }
 }
