@@ -38,7 +38,7 @@ export default class Validator {
       const testResults = [];
       for (let t = 0; t < this.schema[keys[i]].length; t++) {
         const testResult = await this.test(
-          <ITestFunction>this.schema[keys[i]][t].test,
+          this.schema[keys[i]][t].test as ITestFunction,
           data[keys[i]],
           data,
         );
