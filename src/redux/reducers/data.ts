@@ -42,7 +42,7 @@ interface IScan {
 
 export type IResource = IPatient | IAppointment | IScan;
 
-type INewPatient = Omit<IPatient, '_id' | '_rev'>;
+export type INewPatient = Omit<IPatient, '_id' | '_rev'>;
 type INewAppointment = Omit<IAppointment, '_id' | '_rev'>;
 type INewScan = Omit<IScan, '_id' | '_rev'>;
 

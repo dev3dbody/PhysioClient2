@@ -6,26 +6,34 @@ import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
+import { INewPatient } from "../../redux/reducers/data";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patient = useSelector(getCurrentPatient);
-  const initValues = patient || {
+
+  let initValues: INewPatient = {
     name: "",
     surname: "",
     birthDate: "",
     comment: ""
   };
+  let _id: string = "";
+  let _rev: string = "";
+
+  if (patient !== undefined) {
+    ({ _id, _rev, ...initValues } = patient);
+  }
 
   const [values, setValues] = useState(initValues);
-  const handleChange = ({ field, value }: { field: string; value: any }) =>
-    setValues(state => ({ ...state, [field]: value }));
+  const handleChange = ({ field, value }: { field: string; value: string }) =>
+    setValues((state: INewPatient) => ({ ...state, [field]: value }));
 
   const handleSubmit = () =>
     dispatch(
-      patient
-        ? updateRequest("patients", values as any)
-        : createRequest("patients", values)
+      patient === undefined
+        ? createRequest("patients", values)
+        : updateRequest("patients", { _id, _rev, ...values })
     );
 
   return (
@@ -77,7 +85,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
             label="Inne informacje"
             placeholder="Inne informacje"
             onChange={(_, data) =>
-              handleChange({ field: "comment", value: data.value })
+              handleChange({ field: "comment", value: `${data.value}` })
             }
           />
         </Grid.Column>
