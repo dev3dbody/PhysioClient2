@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { getFlashes } from "../../redux/reducers";
 import "./index.css";
 import { SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
+import { removeFlashMessage } from "../../redux/actions/flash";
 
 const Index: React.FunctionComponent = () => {
   const flashes = useSelector(getFlashes);
@@ -22,13 +23,11 @@ const Index: React.FunctionComponent = () => {
     <div className="Flash">
       {flashes.map(({ id, type, text }) => (
         <Message
+          onDismiss={() => removeFlashMessage(id)}
           icon
           key={id}
           floating
-          info={type === "info"}
-          success={type === "success"}
-          error={type === "error"}
-          warning={type === "warning"}
+          {...{ [type]: true }}
         >
           <Icon name={types[type].icon} />
           <Message.Content>
