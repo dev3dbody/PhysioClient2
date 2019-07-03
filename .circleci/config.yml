@@ -28,6 +28,9 @@ jobs:
           name: Build Electron Packages
           command: npm run electron-pack
       - run:
+          name: Run E2E Tests
+          command: npm run e2e-test
+      - run:
           name: Deploy master to AWS S3
           command: |
             if [ "$CIRCLE_BRANCH" == "master" ];
