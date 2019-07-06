@@ -31,6 +31,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
   return (
     <Form>
       <Form.Input
+        data-cy="first_name"
         value={values.name}
         fluid
         label="Imię"
@@ -38,6 +39,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         onChange={(_, data) => handleChange("name", data.value)}
       />
       <Form.Input
+        data-cy="last_name"
         value={values.surname}
         fluid
         label="Nazwisko"
@@ -54,6 +56,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         }}
       />
       <Form.Input
+        data-cy="description"
         value={values.comment}
         fluid
         label="Inne informacje"

@@ -1,34 +1,35 @@
+import PouchDb from "pouchdb";
+
 require("@babel/polyfill");
 
-import { beforeEach, afterEach, describe, it } from "mocha";
+import { beforeEach, after, before, describe, it } from "mocha";
 import { Application } from "spectron";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 chai.should();
 chai.use(chaiAsPromised);
+let $, $$, client;
 
 describe("e2e tests", function() {
   this.timeout(10000);
 
-  beforeEach(function() {
+  beforeEach(async () => {
+    await Promise.all([
+      new PouchDb("patients").destroy(),
+      new PouchDb("appointments").destroy(),
+      new PouchDb("scans").destroy()
+    ]);
+  });
+  before(function() {
     this.app = new Application({
       path: "./dist/mac/Physio Client 2.app/Contents/MacOS/Physio Client 2"
     });
     return this.app.start();
   });
 
-  beforeEach(function() {
+  before(function() {
     chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
-  });
-
-  afterEach(function() {
-    if (this.app && this.app.isRunning()) {
-      return this.app.stop();
-    }
-  });
-
-  it("opens app window", function() {
     return this.app.client
       .waitUntilWindowLoaded()
       .getWindowCount()
@@ -44,5 +45,35 @@ describe("e2e tests", function() {
       .and.be.above(0);
   });
 
-  require("./navigation");
+  before(function(done) {
+    this.app.client.waitUntilWindowLoaded().then(() => {
+      client = this.app.client;
+      $ = selector => this.app.client.$.apply(client, [selector]);
+      $$ = async selector => this.app.client.$$.apply(client, [selector]);
+      done();
+    });
+  });
+
+  after(function() {
+    if (this.app && this.app.isRunning()) {
+      return this.app.stop();
+    }
+  });
+
+  require("./patients");
 });
+
+const exists = async selector => {
+  try {
+    return (await $(selector)).state !== "failure";
+  } catch (e) {
+    console.info({ e });
+    return false;
+  }
+};
+
+const wait = delayInSeconds => {
+  return new Promise(resolve => setTimeout(resolve, delayInSeconds * 1000));
+};
+
+export { $, $$, exists, wait };

@@ -74,6 +74,7 @@
     "@babel/register": "^7.4.4",
     "@rescripts/cli": "0.0.10",
     "@rescripts/rescript-env": "0.0.10",
+    "casual": "^1.6.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "concurrently": "^4.1.0",
