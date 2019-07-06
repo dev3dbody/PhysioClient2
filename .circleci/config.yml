@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: electronuserland/builder:wine
+      - image: electronuserland/builder:wine-chrome
     steps:
       - checkout
       - run:

@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { exists, $, $$, wait } from "./index";
+import { exists, $, wait } from "./index";
 import casual from "casual";
 
 describe("patients", function() {
@@ -45,7 +45,7 @@ describe("patients", function() {
     });
     it("doesn't add new patient on form cancel");
     it("shows validation errors");
-    it("doesn't edit patient record  on form cancel");
+    it("doesn't edit patient record on form cancel");
   });
   describe("patient details", () => {
     it(
