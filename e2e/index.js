@@ -14,13 +14,6 @@ let $, $$, client;
 describe("e2e tests", function() {
   this.timeout(10000);
 
-  beforeEach(async () => {
-    await Promise.all([
-      new PouchDb("patients").destroy(),
-      new PouchDb("appointments").destroy(),
-      new PouchDb("scans").destroy()
-    ]);
-  });
   before(function() {
     this.app = new Application({
       path: "./dist/mac/Physio Client 2.app/Contents/MacOS/Physio Client 2"
@@ -52,6 +45,16 @@ describe("e2e tests", function() {
       $$ = async selector => this.app.client.$$.apply(client, [selector]);
       done();
     });
+  });
+
+  beforeEach(async function() {
+    await Promise.all([
+      new PouchDb("patients").destroy(),
+      new PouchDb("appointments").destroy(),
+      new PouchDb("scans").destroy()
+    ]);
+    this.app.browserWindow.reload();
+    await this.app.client.waitUntilWindowLoaded();
   });
 
   after(function() {
