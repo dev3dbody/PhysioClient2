@@ -42,6 +42,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         <Grid.Row divided>
           <Grid.Column width="6">
             <Form.Input
+              data-cy="first_name"
               value={values.name}
               fluid
               label="Imię"
@@ -53,6 +54,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
           <Grid.Column width="6">
             <Form.Input
+              data-cy="last_name"
               value={values.surname}
               fluid
               label="Nazwisko"
@@ -64,6 +66,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
           <Grid.Column width="4">
             <SemanticDatepicker
+              data-cy="description"
               label="Data urodzenia"
               date={new Date(values.birthDate)}
               type="basic"

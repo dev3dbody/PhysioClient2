@@ -7,6 +7,7 @@ import "semantic-ui-css/semantic.min.css";
 import App from "./App";
 import reducer from "./redux/reducers";
 import database from "./redux/middlewares/database";
+import flash from "./redux/middlewares/flash";
 
 declare global {
   interface Window {
@@ -17,7 +18,7 @@ declare global {
 
 const initialState = {};
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const middlewares = [database];
+const middlewares = [database, flash];
 if (process.env.NODE_ENV !== "production") {
   middlewares.push(require("redux-immutable-state-invariant").default());
 }

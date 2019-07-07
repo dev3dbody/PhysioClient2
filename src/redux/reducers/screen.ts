@@ -14,7 +14,7 @@ export type IScreen =
 const screen = createReducer<IScreen, IAction>('PATIENT')
   .handleAction(navigate, (_, action) => action.payload)
   .handleAction([createSuccess, updateSuccess], (state, action) =>
-    action.payload.model === 'patients' ? 'PATIENT' : state,
+    action.payload.model === 'patients' ? 'PATIENT_DETAILS' : state,
   )
   .handleAction(edit, (state, action) =>
     action.payload.model === 'patients' ? 'EDIT_PATIENT' : state,

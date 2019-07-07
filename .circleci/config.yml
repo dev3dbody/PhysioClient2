@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: electronuserland/builder:wine
+      - image: electronuserland/builder:wine-chrome
     steps:
       - checkout
       - run:
@@ -27,6 +27,9 @@ jobs:
       - run:
           name: Build Electron Packages
           command: npm run electron-pack
+#      - run:
+#          name: Run E2E Tests
+#          command: npm run e2e-test
       - run:
           name: Deploy master to AWS S3
           command: |
