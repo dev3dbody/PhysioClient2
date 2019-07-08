@@ -6,6 +6,7 @@ import * as fromLoading from './loading';
 import loading, { ILoading } from './loading';
 import * as fromCurrent from './current';
 import current, { ICurrent } from './current';
+import flash, { IFlash } from './flash';
 import _ from 'lodash'
 
 export interface IState {
@@ -13,9 +14,10 @@ export interface IState {
   data: IData;
   loading: ILoading;
   current: ICurrent;
+  flash: [IFlash];
 }
 
-const reducer = combineReducers({ screen, data, loading, current });
+const reducer = combineReducers({ screen, data, loading, current, flash });
 export default reducer;
 
 export const getScreen = (state: IState) => state.screen;
@@ -75,4 +77,7 @@ export const getCurrentScan = (state: IState) => {
     return getScanById(state, id);
   }
   return undefined;
+};
+export const getFlashes = (state: IState) => {
+  return state.flash
 };

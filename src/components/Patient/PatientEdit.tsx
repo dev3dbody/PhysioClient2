@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Message, Grid, Form, Button, Icon } from "semantic-ui-react";
+import { Grid, Form, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
@@ -8,6 +8,8 @@ import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 import { INewPatient } from "../../redux/reducers/data";
 import Validator, { IErrors } from "../../lib/validator";
+import ValidatorMessage from "../ValidatorMessage";
+import _ from "lodash";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
@@ -51,54 +53,78 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
     values: initValues
   });
   const handleChange = async (field: string, value: string) => {
-    const errors = await validator.validate(fields.values);
     setFields((state: IFormState) => ({
       values: { ...state.values, [field]: value },
-      errors
+      errors: { ..._.omit(state.errors, [field]) }
     }));
   };
 
-  const handleSubmit = () =>
-    dispatch(
+  const handleSubmit = async () => {
+    const errors = await validator.validate(fields.values);
+    if (!_.isEmpty(errors)) {
+      setFields((state: IFormState) => ({
+        values: { ...state.values },
+        errors
+      }));
+      return;
+    }
+    return dispatch(
       patient === undefined
         ? createRequest("patients", fields.values)
         : updateRequest("patients", { _id, _rev, ...fields.values })
     );
+  };
 
   return (
     <Form>
-      <Form.Input
-        error={!!fields.errors.name}
-        value={fields.values.name}
-        fluid
-        label="Imię"
-        placeholder="Imię"
-        onChange={(_, data) => handleChange("name", data.value)}
-      />
-      <Form.Input
-        error={!!fields.errors.surname}
-        value={fields.values.surname}
-        fluid
-        label="Nazwisko"
-        placeholder="Nazwisko"
-        onChange={(_, data) => handleChange("surname", data.value)}
-      />
-      <SemanticDatepicker
-        date={new Date(fields.values.birthDate)}
-        type="basic"
-        onDateChange={newDate => {
-          if (newDate) {
-            handleChange("birthDate", newDate.toString());
-          }
-        }}
-      />
-      <Form.Input
-        value={fields.values.comment}
-        fluid
-        label="Inne informacje"
-        placeholder="Inne informacje"
-        onChange={(_, data) => handleChange("comment", data.value)}
-      />
+      <Grid columns="3">
+        <Grid.Row divided>
+          <Grid.Column width="6">
+            <Form.Input
+              error={!!fields.errors.name}
+              data-cy="first_name"
+              value={fields.values.name}
+              fluid
+              label="Imię"
+              placeholder="Imię"
+              onChange={(_, data) => handleChange("name", data.value)}
+            />
+          </Grid.Column>
+          <Grid.Column width="6">
+            <Form.Input
+              error={!!fields.errors.surname}
+              data-cy="last_name"
+              value={fields.values.surname}
+              fluid
+              label="Nazwisko"
+              placeholder="Nazwisko"
+              onChange={(_, data) => handleChange("surname", data.value)}
+            />
+          </Grid.Column>
+          <Grid.Column width="4">
+            <SemanticDatepicker
+              data-cy="description"
+              label="Data urodzenia"
+              date={new Date(fields.values.birthDate)}
+              type="basic"
+              onDateChange={newDate => {
+                if (newDate) {
+                  handleChange("birthDate", newDate.toString());
+                }
+              }}
+            />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Column width="12">
+          <Form.TextArea
+            value={fields.values.comment}
+            label="Inne informacje"
+            placeholder="Inne informacje"
+            onChange={(_, data) => handleChange("comment", `${data.value}`)}
+          />
+        </Grid.Column>
+      </Grid>
+
       <Grid>
         <Grid.Row columns="2">
           <Grid.Column>
@@ -119,14 +145,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      {Object.keys(fields.errors).length && (
-        <Message negative>
-          <Message.Header>Formularz zawiera błedy</Message.Header>
-          {Object.values(fields.errors).map(error => (
-            <p>{error}</p>
-          ))}
-        </Message>
-      )}
+      <ValidatorMessage errors={fields.errors} />
     </Form>
   );
 };

@@ -1,5 +1,6 @@
 import { createAction } from 'typesafe-actions';
 import { IScreen } from '../reducers/screen';
+import { IFlash } from '../reducers/flash';
 import { IModel, IResource, INewResource } from '../reducers/data';
 
 export const navigate = createAction('NAVIGATE', action => {
@@ -23,10 +24,10 @@ export const listSuccess = createAction('LIST_SUCCESS', action => {
   return (model: IModel, data: IResource[]) => action({ model, data });
 });
 export const createSuccess = createAction('CREATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource) => action({ model, resource });
+  return (model: IModel, resource: IResource, meta?: {flash?: IFlash}) => action({ model, resource }, meta);
 });
 export const updateSuccess = createAction('UPDATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource) => action({ model, resource });
+  return (model: IModel, resource: IResource, meta: any) => action({ model, resource }, meta);
 });
 export const removeSuccess = createAction('REMOVE_SUCCESS', action => {
   return (model: IModel, id: string) => action({ model, id });

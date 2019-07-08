@@ -68,7 +68,8 @@ export default class Validator {
     }
 
     type IValidatorTest=(input: any)=>boolean | ITestResult
-   
+
     return (validator[test] as IValidatorTest)(value);
   }
 }
+

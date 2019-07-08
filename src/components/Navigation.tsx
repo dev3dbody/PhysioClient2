@@ -18,7 +18,7 @@ const Navigation: React.FunctionComponent = () => {
   ];
 
   return (
-    <Menu size="massive" pointing>
+    <Menu data-cy="navigation" size="massive" pointing>
       {items.map(({ name, actions }: { name: string; actions: IScreen[] }) => (
         <Menu.Item
           key={name}

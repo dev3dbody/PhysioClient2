@@ -19,7 +19,11 @@ const PatientList: React.FunctionComponent<{}> = () => {
           <Icon name="user md" />
           Jeszcze nie zarejestrowano żadnego pacjenta
         </Header>
-        <Button primary onClick={() => dispatch(navigate("ADD_PATIENT"))}>
+        <Button
+          data-cy="new-patient-hero"
+          primary
+          onClick={() => dispatch(navigate("ADD_PATIENT"))}
+        >
           <Icon name="add user" /> Dodaj pacjenta
         </Button>
       </Segment>
@@ -32,6 +36,7 @@ const PatientList: React.FunctionComponent<{}> = () => {
   return (
     <>
       <Button
+        data-cy="new-patient"
         floated="right"
         primary
         onClick={() => dispatch(navigate("ADD_PATIENT"))}
