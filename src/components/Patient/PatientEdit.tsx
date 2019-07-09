@@ -124,7 +124,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           />
         </Grid.Column>
       </Grid>
-
+      <ValidatorMessage errors={fields.errors} />
       <Grid>
         <Grid.Row columns="2">
           <Grid.Column>
@@ -145,7 +145,6 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <ValidatorMessage errors={fields.errors} />
     </Form>
   );
 };
