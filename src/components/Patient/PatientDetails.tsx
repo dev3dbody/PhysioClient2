@@ -6,7 +6,8 @@ import {
   Button,
   Dropdown,
   Header,
-  Icon
+  Icon,
+  Segment
 } from "semantic-ui-react";
 import { getCurrentPatient } from "../../redux/reducers";
 import { edit, navigate } from "../../redux/actions";
@@ -65,16 +66,31 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Grid columns={3}>
+      <Grid columns={2} stackable>
         <Grid.Row>
-          <Grid.Column>TUTAJ DANE PACJENTA</Grid.Column>
-          <Grid.Column>TUTAJ OSTATNIE WIZYTY</Grid.Column>
-          <Grid.Column>TUTAJ SKANY</Grid.Column>
+          <Grid.Column width={7} style={{ margin: "1em 0.5em 3em 0" }}>
+            <Header as="h4">Data urodzenia: {patient.birthDate} </Header>
+            <Header as="h4">Data ostatniej wizyty: (DD/MM/YYYY) </Header>
+            <Header as="h4">Inne informacje:</Header>
+            <Segment>
+              Pellentesque habitant morbi tristique senectus. Quisque at gravida
+              mauris. Maecenas aliquam, odio dapibus tempor faucibus, sapien
+              ante condimentum est, sed feugiat tortor sem at arcu. Vivamus
+              egestas sem eget euismod pellentesque.
+            </Segment>
+          </Grid.Column>
+          <Grid.Column width={8} style={{ margin: "1em 0 3em 0.5em" }}>
+            <Header as="h4">
+              Ostatnia wizyta (data i godzina): (DD/MM/YYYY, 10:30)
+            </Header>
+            <Header as="h5">Skan z ostatniej wizyty:</Header>
+            <p>( tutaj skan )</p>
+          </Grid.Column>
         </Grid.Row>
-        <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
-          <Icon name="arrow left" /> Wróć
-        </Button>
       </Grid>
+      <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
+        <Icon name="arrow left" /> Wróć
+      </Button>
     </Container>
   );
 };
