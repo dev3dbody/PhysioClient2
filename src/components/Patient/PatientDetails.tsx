@@ -24,7 +24,6 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
             console.info("onc");
             dispatch(edit("patients", patient._id));
           }}
-          primary
           className="button icon"
           options={[
             { key: "edit", icon: "edit", text: "Modyfikuj", value: "edit" }
