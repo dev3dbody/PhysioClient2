@@ -41,7 +41,7 @@
   "scripts": {
     "start": "rescripts start",
     "build": "rescripts build",
-    "test": "rescripts test",
+    "test": "mocha --require ts-node/register './src/**/*.spec.ts'",
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
@@ -74,6 +74,8 @@
     "@babel/register": "^7.4.4",
     "@rescripts/cli": "0.0.10",
     "@rescripts/rescript-env": "0.0.10",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
     "casual": "^1.6.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -86,6 +88,7 @@
     "mocha": "^6.1.4",
     "prettier": "1.18.2",
     "spectron": "^7.0.0",
+    "ts-node": "^8.3.0",
     "wait-on": "^3.2.0"
   },
   "build": {
