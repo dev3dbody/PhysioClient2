@@ -50,3 +50,5 @@ export const edit = createAction('EDIT', action => {
 export const details = createAction('DETAILS', action => {
   return (model: IModel, id: string) => action({ model, id });
 });
+
+export * from './flash';

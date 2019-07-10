@@ -1,26 +1,29 @@
-import { addFlashMessage, removeFlashMessage } from "../actions/flash";
+import { addFlashMessage, removeFlashMessage } from "../actions";
 import flash, { IFlash } from "./flash";
-import { IAction } from "../actions";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+import casual from 'casual';
+
+chai.should();
+chai.use(chaiAsPromised);
 
 describe("flash reducer", () => {
   it("adds correct message", () => {
+    const sentence = casual.sentence;
     const initState:IFlash[] = [];
-    // @ts-ignore
-    const action: IAction = addFlashMessage(
+    const action = addFlashMessage(
       "1",
       "info",
-      "Sample Info Flash Message",
-      4000
+      sentence,
+      3000,
     );
-    // @ts-ignore
     const newState = flash(initState, action);
-    expect(newState).toEqual([
-      {
-        id: "1",
-        type: "info",
-        text: "Sample Info Flash Message"
-      }
-    ]);
+    newState.should.deep.equal([{
+      duration: 3000,
+      id: "1",
+      type: "info",
+      text: sentence
+    }]);
   });
 
   it("removes specific message", () => {
@@ -28,12 +31,23 @@ describe("flash reducer", () => {
       {
         id: "1",
         type: "info",
-        text: "Sample Info Flash Message"
-      }
+        text: casual.sentence
+      },
+      {
+        id: "2",
+        type: "error",
+        text: casual.sentence
+      },
+      {
+        id: "3",
+        type: "success",
+        text: casual.sentence
+      },
     ];
-    const action = removeFlashMessage("1");
-    // @ts-ignore
+    const action = removeFlashMessage("2");
     const newState = flash(initState, action);
-    expect(newState).toEqual([]);
+    newState.should.have.lengthOf(2);
+    newState[0].should.deep.equal(initState[0]);
+    newState[1].should.deep.equal(initState[2]);
   });
 });

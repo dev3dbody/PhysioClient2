@@ -25,6 +25,9 @@ jobs:
             - node_modules
           key: node-v2-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - run:
+          name: Unit Tests
+          command: npm test
+      - run:
           name: Build Electron Packages
           command: npm run electron-pack
 #      - run:
