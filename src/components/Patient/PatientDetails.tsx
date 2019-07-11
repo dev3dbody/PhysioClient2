@@ -66,19 +66,17 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
         <Grid.Row>
           <Grid.Column width={7} style={{ padding: "0 2em 3em 0" }}>
             <p>
-              <strong>Data urodzenia: </strong>03.06.1982
+              <strong>Data urodzenia: </strong>
+              {patient.birthDate}
             </p>
             <p>
               <strong>Ostatnia wizyta: </strong>24.05.2017
             </p>
-            <Header as="h5">Inne informacje:</Header>
-            <Segment>
-              Pellentesque habitant morbi tristique senectus. Quisque at gravida
-              mauris. Maecenas aliquam, odio dapibus tempor faucibus, sapien
-              ante condimentum est, sed feugiat tortor sem at arcu. Vivamus
-              egestas sem eget euismod pellentesque.
-            </Segment>
-            <Header as="h5">Ostatnie wizyty:</Header>
+            <Header as="h4">Inne informacje:</Header>
+            <Segment>{patient.comment}</Segment>
+            <Header as="h3" style={{ margin: "2em 0 1em 0" }}>
+              Ostatnie wizyty
+            </Header>
             <Table celled style={{ margin: "0" }}>
               <Table.Header>
                 <Table.Row>
@@ -167,11 +165,14 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
                 </Table.Row>
               </Table.Body>
             </Table>
-            <Button size="small" attached="bottom" content="Starsze wizyty" />
+            <Button
+              size="small"
+              attached="bottom"
+              content="Pokaż starsze wizyty"
+            />
           </Grid.Column>
           <Grid.Column width={9} style={{ padding: "0 0 3em 2em" }}>
-            <Header as="h4">Ostatnie badanie:</Header>
-            <Header.Subheader>02.02.2017, 09:00</Header.Subheader>
+            <Header as="h4">Ostatnie badanie - 02.02.2017, 09:00</Header>
             <Segment>
               <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
             </Segment>
