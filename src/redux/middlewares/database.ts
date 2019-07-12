@@ -122,8 +122,6 @@ const database: Middleware = ({ dispatch }) => next => async (
     } catch (err) {
       dispatch(removeFailure(model, err));
     }
-
-    dispatch(removeSuccess(model, resource._id));
   }
 };
 export default database;
