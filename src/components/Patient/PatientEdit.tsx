@@ -93,7 +93,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               onChange={(_, data) => handleChange("name", data.value)}
             />
           </Grid.Column>
-          <Grid.Column width="6">
+          <Grid.Column width="5">
             <Form.Input
               error={!!fields.errors.surname}
               data-cy="last_name"
@@ -104,8 +104,9 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               onChange={(_, data) => handleChange("surname", data.value)}
             />
           </Grid.Column>
-          <Grid.Column width="4">
+          <Grid.Column width="5">
             <SemanticDatepicker
+              iconPosition="left"
               locale={locale}
               label="Data urodzenia"
               selected={
@@ -125,7 +126,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
             />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Column width="12">
+        <Grid.Column width="10">
           <Form.TextArea
             data-cy="description"
             value={fields.values.comment}
