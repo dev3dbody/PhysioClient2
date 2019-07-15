@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon } from "semantic-ui-react";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
+import locale from "../../lib/calendarLocale";
+
 import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
 
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
@@ -10,6 +12,7 @@ import { INewPatient } from "../../redux/reducers/data";
 import Validator, { IErrors } from "../../lib/validator";
 import ValidatorMessage from "../ValidatorMessage";
 import _ from "lodash";
+import moment from "moment";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
@@ -103,12 +106,20 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
           <Grid.Column width="4">
             <SemanticDatepicker
+              locale={locale}
               label="Data urodzenia"
-              date={new Date(fields.values.birthDate)}
+              selected={
+                fields.values.birthDate
+                  ? moment(fields.values.birthDate, "YYYY-MM-DD").toDate()
+                  : undefined
+              }
               type="basic"
               onDateChange={newDate => {
                 if (newDate) {
-                  handleChange("birthDate", newDate.toString());
+                  handleChange(
+                    "birthDate",
+                    moment(newDate as Date).format("YYYY-MM-DD")
+                  );
                 }
               }}
             />
