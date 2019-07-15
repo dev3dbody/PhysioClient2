@@ -7,7 +7,7 @@ import casual from 'casual';
 chai.should();
 chai.use(chaiAsPromised);
 
-describe.only("flash reducer", () => {
+describe("flash reducer", () => {
   it("adds correct message", () => {
     const sentence = casual.sentence;
     const initState:IFlash[] = [];
