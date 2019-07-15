@@ -44,7 +44,7 @@
   "scripts": {
     "start": "rescripts start",
     "build": "rescripts build",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' mocha --require ts-node/register './src/**/*.spec.ts'",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' mocha --require ts-node/register './src/**/*.spec.ts' && CI=1 react-scripts test",
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",

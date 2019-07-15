@@ -6,8 +6,7 @@ import fakePouch, {
   mockPost,
   mockPut,
   mockRemove
-} from "pouchdb";
-jest.mock("pouchdb");
+} from "./__mocks__/pouchdb";
 
 import {
   listRequest,
@@ -19,13 +18,18 @@ import {
   removeRequest,
   removeSuccess,
   listFailure
-} from "../actions/actions";
+} from "../actions";
+
 import databaseMiddleware from "./database";
 
 describe("PouchDb middleware", () => {
   const store = { dispatch: jest.fn(), getState: jest.fn() };
   const next = jest.fn();
   beforeEach(() => {
+    jest.mock("pouchdb");
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 

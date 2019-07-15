@@ -1,5 +1,5 @@
-import { createSuccess } from "../actions/actions";
-import { addFlashMessage, removeFlashMessage } from "../actions/flash";
+import { createSuccess } from "../actions";
+import { addFlashMessage, removeFlashMessage } from "../actions";
 import flashMiddleware from "./flash";
 jest.useFakeTimers();
 describe("Flash messages middleware", () => {
