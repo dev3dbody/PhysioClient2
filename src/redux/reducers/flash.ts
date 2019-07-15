@@ -5,7 +5,7 @@ import {
   addFlashMessage,
   removeFlashMessage,
   IFlashType,
-} from '../actions/flash'
+} from '../actions'
 
 export interface IFlash {
   id: string;

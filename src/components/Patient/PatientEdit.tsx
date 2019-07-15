@@ -103,7 +103,6 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           </Grid.Column>
           <Grid.Column width="4">
             <SemanticDatepicker
-              data-cy="description"
               label="Data urodzenia"
               date={new Date(fields.values.birthDate)}
               type="basic"
@@ -117,6 +116,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         </Grid.Row>
         <Grid.Column width="12">
           <Form.TextArea
+            data-cy="description"
             value={fields.values.comment}
             label="Inne informacje"
             placeholder="Inne informacje"

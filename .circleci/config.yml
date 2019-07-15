@@ -17,9 +17,9 @@ jobs:
       - run:
           name: Install Dependices
           command: npm install
-#      - run:
-#          name: Run Tests
-#          command: npm test
+      - run:
+          name: Run Tests
+          command: npm test
       - save_cache:
           paths:
             - node_modules
@@ -27,9 +27,9 @@ jobs:
       - run:
           name: Build Electron Packages
           command: npm run electron-pack
-#      - run:
-#          name: Run E2E Tests
-#          command: npm run e2e-test
+      - run:
+          name: Run E2E Tests
+          command: npm run e2e-test-ci
       - run:
           name: Deploy master to AWS S3
           command: |
