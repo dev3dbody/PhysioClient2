@@ -39,6 +39,12 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         test: value => value.length > 1,
         message: "Nazwisko musi mieć przynajmniej dwa znaki"
       }
+    ],
+    birthDate: [
+      {
+        test: value => value === "" || moment(value, "YYYY-MM-DD").isValid(),
+        message: "Wpisz poprawną datę"
+      }
     ]
   });
 
@@ -101,25 +107,30 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
             />
           </Grid.Column>
           <Grid.Column width="5">
-            <Form.Field>
+            <Form.Field error={!!fields.errors.birthDate}>
               <label>Data urodzenia</label>
               <DateInput
                 duration={0}
                 closable
                 closeOnMouseLeave
+                clearable
                 dateFormat="YYYY-MM-DD"
                 localization="pl"
                 startMode="year"
                 name="birthDate"
                 placeholder="Data urodzenia"
                 value={fields.values.birthDate}
-                iconPosition="left"
+                iconPosition="right"
+                popupPosition={"bottom right"}
+                onClear={() => handleChange("birthDate", "")}
                 onChange={(e, { value, format }) => {
                   if (value) {
-                    handleChange(
-                      "birthDate",
-                      moment(value, format).format("YYYY-MM-DD")
-                    );
+                    const date = moment(value, format);
+                    if (date.isValid()) {
+                      handleChange("birthDate", date.format("YYYY-MM-DD"));
+                    } else {
+                      handleChange("birthDate", "");
+                    }
                   }
                 }}
               />
