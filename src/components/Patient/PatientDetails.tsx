@@ -15,7 +15,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
   return (
     <>
       <Button.Group floated="right">
-        <Button primary>
+        <Button primary onClick={() => dispatch(navigate("ADD_APPOINTMENT"))}>
           <Icon name="add to calendar" />
           Nowa wizyta
         </Button>
