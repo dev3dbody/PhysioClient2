@@ -88,9 +88,7 @@ const database: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { id, rev } = await db[model].post(resource);
-      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }, {
-        flash: { id: `${model}${id}creation`, duration: 3000, type: "success", text: 'Obiekt został zapisany' }
-      }));
+      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }));
     } catch (err) {
       dispatch(createFailure(model, err));
     }
@@ -104,9 +102,7 @@ const database: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { rev } = await db[model].put(resource);
-      dispatch(updateSuccess(model, { ...resource, _rev: rev }, {
-        flash: { duration: 3000, type: "success", text: 'Zmiany zostały zapisane' }
-      }));
+      dispatch(updateSuccess(model, { ...resource, _rev: rev }));
     } catch (err) {
       dispatch(updateFailure(model, err));
     }
@@ -122,8 +118,6 @@ const database: Middleware = ({ dispatch }) => next => async (
     } catch (err) {
       dispatch(removeFailure(model, err));
     }
-
-    dispatch(removeSuccess(model, resource._id));
   }
 };
 export default database;
