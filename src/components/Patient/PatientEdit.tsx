@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon } from "semantic-ui-react";
-import SemanticDatepicker from "react-semantic-ui-datepickers";
-import locale from "../../lib/calendarLocale";
-
-import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
-
+import { DateInput } from "semantic-ui-calendar-react";
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 import { INewPatient } from "../../redux/reducers/data";
@@ -13,11 +9,11 @@ import Validator, { IErrors } from "../../lib/validator";
 import ValidatorMessage from "../ValidatorMessage";
 import _ from "lodash";
 import moment from "moment";
+import "moment/locale/pl";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patient = useSelector(getCurrentPatient);
-
   let initValues: INewPatient = {
     name: "",
     surname: "",
@@ -105,25 +101,29 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
             />
           </Grid.Column>
           <Grid.Column width="5">
-            <SemanticDatepicker
-              iconPosition="left"
-              locale={locale}
-              label="Data urodzenia"
-              selected={
-                fields.values.birthDate
-                  ? moment(fields.values.birthDate, "YYYY-MM-DD").toDate()
-                  : undefined
-              }
-              type="basic"
-              onDateChange={newDate => {
-                if (newDate) {
-                  handleChange(
-                    "birthDate",
-                    moment(newDate as Date).format("YYYY-MM-DD")
-                  );
-                }
-              }}
-            />
+            <Form.Field>
+              <label>Data urodzenia</label>
+              <DateInput
+                duration={0}
+                closable
+                closeOnMouseLeave
+                dateFormat="YYYY-MM-DD"
+                localization="pl"
+                startMode="year"
+                name="birthDate"
+                placeholder="Data urodzenia"
+                value={fields.values.birthDate}
+                iconPosition="left"
+                onChange={(e, { value, format }) => {
+                  if (value) {
+                    handleChange(
+                      "birthDate",
+                      moment(value, format).format("YYYY-MM-DD")
+                    );
+                  }
+                }}
+              />
+            </Form.Field>
           </Grid.Column>
         </Grid.Row>
         <Grid.Column width="10">
