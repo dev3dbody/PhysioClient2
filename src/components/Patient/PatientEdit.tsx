@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon } from "semantic-ui-react";
-import SemanticDatepicker from "react-semantic-ui-datepickers";
-import "react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css";
-
+import { DateInput } from "semantic-ui-calendar-react";
 import { createRequest, updateRequest, navigate } from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 import { INewPatient } from "../../redux/reducers/data";
 import Validator, { IErrors } from "../../lib/validator";
 import ValidatorMessage from "../ValidatorMessage";
 import _ from "lodash";
+import moment from "moment";
+import "moment/locale/pl";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const patient = useSelector(getCurrentPatient);
-
   let initValues: INewPatient = {
     name: "",
     surname: "",
@@ -39,6 +38,12 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
       {
         test: value => value.length > 1,
         message: "Nazwisko musi mieć przynajmniej dwa znaki"
+      }
+    ],
+    birthDate: [
+      {
+        test: value => value === "" || moment(value, "YYYY-MM-DD").isValid(),
+        message: "Wpisz poprawną datę"
       }
     ]
   });
@@ -90,7 +95,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               onChange={(_, data) => handleChange("name", data.value)}
             />
           </Grid.Column>
-          <Grid.Column width="6">
+          <Grid.Column width="5">
             <Form.Input
               error={!!fields.errors.surname}
               data-cy="last_name"
@@ -101,20 +106,38 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               onChange={(_, data) => handleChange("surname", data.value)}
             />
           </Grid.Column>
-          <Grid.Column width="4">
-            <SemanticDatepicker
-              label="Data urodzenia"
-              date={new Date(fields.values.birthDate)}
-              type="basic"
-              onDateChange={newDate => {
-                if (newDate) {
-                  handleChange("birthDate", newDate.toString());
-                }
-              }}
-            />
+          <Grid.Column width="5">
+            <Form.Field error={!!fields.errors.birthDate}>
+              <label>Data urodzenia</label>
+              <DateInput
+                duration={0}
+                closable
+                closeOnMouseLeave
+                clearable
+                dateFormat="YYYY-MM-DD"
+                localization="pl"
+                startMode="year"
+                name="birthDate"
+                placeholder="Data urodzenia"
+                value={fields.values.birthDate}
+                iconPosition="right"
+                popupPosition={"bottom right"}
+                onClear={() => handleChange("birthDate", "")}
+                onChange={(e, { value, format }) => {
+                  if (value) {
+                    const date = moment(value, format);
+                    if (date.isValid()) {
+                      handleChange("birthDate", date.format("YYYY-MM-DD"));
+                    } else {
+                      handleChange("birthDate", "");
+                    }
+                  }
+                }}
+              />
+            </Form.Field>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Column width="12">
+        <Grid.Column width="10">
           <Form.TextArea
             data-cy="description"
             value={fields.values.comment}
