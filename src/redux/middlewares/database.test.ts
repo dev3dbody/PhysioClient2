@@ -54,15 +54,7 @@ describe("PouchDb middleware", () => {
       expect(mockPost).toHaveBeenCalledWith(justNewPatient);
       const expectedAction = createSuccess(
         "patients",
-        { ...justNewPatient, _id: id, _rev: rev },
-        {
-          flash: {
-            duration: 3000,
-            id: "patients3creation",
-            text: "Obiekt został zapisany",
-            type: "success"
-          }
-        }
+        { ...justNewPatient, _id: id, _rev: rev }
       );
       expect(store.dispatch).toHaveBeenCalledTimes(1);
       expect(store.dispatch.mock.calls[0][0]).toEqual(expectedAction);
@@ -75,13 +67,6 @@ describe("PouchDb middleware", () => {
       const expectedAction = updateSuccess(
         "patients",
         { ...updatePatient, _rev: 7777 },
-        {
-          flash: {
-            duration: 3000,
-            text: "Zmiany zostały zapisane",
-            type: "success"
-          }
-        }
       );
       expect(store.dispatch).toHaveBeenCalledTimes(1);
       expect(store.dispatch.mock.calls[0][0]).toEqual(expectedAction);
