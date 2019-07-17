@@ -73,7 +73,11 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
               <strong>Ostatnia wizyta: </strong>24.05.2017
             </p>
             <Header as="h4">Inne informacje:</Header>
-            <Segment>{patient.comment}</Segment>
+            <Segment>
+              {patient.comment.split("\n").map((line, key) => (
+                <p key={key}>{line}</p>
+              ))}
+            </Segment>
             <Header as="h3" style={{ margin: "2em 0 1em 0" }}>
               Ostatnie wizyty
             </Header>
