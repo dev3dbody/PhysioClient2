@@ -129,17 +129,28 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         <Grid.Row columns="2">
           <Grid.Column>
             <Button.Group>
-              <Button onClick={handleSubmit} positive>
+              <Button
+                data-cy="patient-save-button"
+                onClick={handleSubmit}
+                positive
+              >
                 Zapisz
               </Button>
               <Button.Or text="lub" />
-              <Button onClick={() => dispatch(navigate("PATIENT"))}>
+              <Button
+                data-cy="patient-cancel-button"
+                onClick={() => dispatch(navigate("PATIENT"))}
+              >
                 Anuluj
               </Button>
             </Button.Group>
           </Grid.Column>
           <Grid.Column textAlign="right">
-            <Button negative onClick={() => dispatch(navigate("PATIENT"))}>
+            <Button
+              data-cy="patient-delete-button"
+              negative
+              onClick={() => dispatch(navigate("PATIENT"))}
+            >
               <Icon name="trash" /> Usuń
             </Button>
           </Grid.Column>

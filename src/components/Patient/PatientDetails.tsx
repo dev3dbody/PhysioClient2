@@ -20,6 +20,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           Nowa wizyta
         </Button>
         <Dropdown
+          data-cy="dropdown-button-icon"
           onChange={() => {
             console.info("onc");
             dispatch(edit("patients", patient._id));
@@ -40,7 +41,11 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
       </Header>
       <Segment>TUTAJ DANE PACJENTA</Segment>
       <Segment>TUTAJ OSTATNIE WIZYTY</Segment>
-      <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
+      <Button
+        data-cy="back-button"
+        onClick={() => dispatch(navigate("PATIENT"))}
+        basic
+      >
         <Icon name="arrow left" /> Wróć
       </Button>
     </>
