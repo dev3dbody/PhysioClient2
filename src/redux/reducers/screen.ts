@@ -5,6 +5,7 @@ export type IScreen =
   | 'PATIENT'
   | 'ADD_PATIENT'
   | 'EDIT_PATIENT'
+  | 'EDIT_APPOINTMENT'
   | 'PATIENT_DETAILS'
   | 'APPOINTMENT_DETAILS'
   | 'APPOINTMENT'
@@ -13,6 +14,26 @@ export type IScreen =
   | 'SCANNER';
 
 const screen = createReducer<IScreen, IAction>('PATIENT')
+  .handleAction(edit, (state, action) => {
+    switch (action.payload.model) {
+      case 'patients':
+        return 'EDIT_PATIENT';
+      case 'appointments':
+        return 'EDIT_APPOINTMENT';
+      default:
+        return state;
+    }
+  })
+  .handleAction(details, (state, action) => {
+    switch (action.payload.model) {
+      case 'patients':
+        return 'PATIENT_DETAILS';
+      case 'appointments':
+        return 'APPOINTMENT_DETAILS';
+      default:
+        return state;
+    }
+  })
   .handleAction(navigate, (_, action) => action.payload)
   .handleAction([createSuccess, updateSuccess], (state, action) => {
     switch (action.payload.model) {
@@ -23,10 +44,6 @@ const screen = createReducer<IScreen, IAction>('PATIENT')
       default:
         return state;
     }
-  })
-  .handleAction(edit, (state, action) =>
-    action.payload.model === 'patients' ? 'EDIT_PATIENT' : state,
-  ).handleAction(details, (state, action) =>
-    action.payload.model === 'patients' ? 'PATIENT_DETAILS' : state,
-  );
+  });
+
 export default screen;

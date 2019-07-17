@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon, Header } from "semantic-ui-react";
+import { DateTimeInput } from "semantic-ui-calendar-react";
 
 import {
   createRequest,
@@ -22,11 +23,12 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
   const dispatch = useDispatch();
   const appointment = useSelector(getCurrentAppointment);
   const patient = useSelector(getCurrentPatient);
+  const dateFormat = "YYYY-MM-DD @ HH:mm";
 
   let initValues: INewAppointment = {
     patientId,
     interview: "",
-    visitDate: moment().format("YYYY-MM-DD")
+    visitDate: moment().format(dateFormat)
   };
   let _id: string = "";
   let _rev: string = "";
@@ -68,6 +70,30 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
         </Header>
       )}
       <Form>
+        <Form.Field>
+          <label>Data wizty</label>
+          <DateTimeInput
+            duration={0}
+            closable
+            closeOnMouseLeave
+            dateFormat={dateFormat}
+            localization="pl"
+            placeholder="Data wizyty"
+            value={fields.values.visitDate}
+            iconPosition="right"
+            popupPosition={"bottom right"}
+            onChange={(e, { value, format }) => {
+              if (value) {
+                const date = moment(value, format);
+                if (date.isValid()) {
+                  handleChange("visitDate", date.format(dateFormat));
+                } else {
+                  handleChange("visitDate", "");
+                }
+              }
+            }}
+          />
+        </Form.Field>
         <Form.TextArea
           autoFocus
           data-cy="description"

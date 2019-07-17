@@ -9,7 +9,6 @@ import Validator, { IErrors } from "../../lib/validator";
 import ValidatorMessage from "../ValidatorMessage";
 import _ from "lodash";
 import moment from "moment";
-import "moment/locale/pl";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();

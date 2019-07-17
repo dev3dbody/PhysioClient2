@@ -16,8 +16,11 @@ const initCurrent = {
 const current = createReducer<ICurrent, IAction>(initCurrent).handleAction(
   navigate,
   (state, action) => {
-    if (action.payload === 'ADD_PATIENT') {
-      return ({ ...state, patients: undefined})
+    switch (action.payload) {
+      case 'ADD_PATIENT':
+        return ({ ...state, patients: undefined});
+      case 'ADD_APPOINTMENT':
+        return ({ ...state, appointments: undefined});
     }
     return ({ ...state })
   }
