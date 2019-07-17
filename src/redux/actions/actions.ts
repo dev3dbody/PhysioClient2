@@ -24,10 +24,14 @@ export const listSuccess = createAction('LIST_SUCCESS', action => {
   return (model: IModel, data: IResource[]) => action({ model, data });
 });
 export const createSuccess = createAction('CREATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource, meta?: {flash?: IFlash}) => action({ model, resource }, meta);
+  return (model: IModel, resource: IResource) => action(
+    { model, resource },
+    { flash: { duration: 3000, type: "success", text: 'Obiekt został zapisany' } });
 });
 export const updateSuccess = createAction('UPDATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource, meta: any) => action({ model, resource }, meta);
+  return (model: IModel, resource: IResource) => action(
+    { model, resource },
+    { flash: { duration: 3000, type: "success", text: 'Zmiany zostały zapisane' } });
 });
 export const removeSuccess = createAction('REMOVE_SUCCESS', action => {
   return (model: IModel, id: string) => action({ model, id });
