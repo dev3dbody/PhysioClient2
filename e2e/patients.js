@@ -24,7 +24,9 @@ describe("patients", function() {
       for (const field of fields) {
         values[field] = casual[field];
         // Form.Input produces div with input inside
-        await $(`[data-cy="${field}"] input`).setValue(values[field]);
+        await $(
+          `[data-cy="${field}"]${field !== "description" ? " input" : ""}`
+        ).setValue(values[field]);
       }
 
       // wait optionally to visually check if form is filled ok

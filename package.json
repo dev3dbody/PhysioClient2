@@ -6,6 +6,7 @@
   "main": "public/electron.js",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/jest": "24.0.14",
     "@types/lodash": "^4.14.134",
     "@types/node": "12.0.8",
@@ -14,6 +15,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.1.0",
     "@types/redux": "^3.6.0",
+    "@types/validator": "^10.11.1",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "dotenv-cli": "^2.0.0",
@@ -30,25 +32,27 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
     "react-scripts": "3.0.1",
-    "react-semantic-ui-datepickers": "^1.10.0",
     "redux": "^4.0.1",
     "redux-immutable-state-invariant": "^2.1.0",
+    "semantic-ui-calendar-react": "^0.15.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.2",
     "typesafe-actions": "^4.4.1",
-    "typescript": "3.5.2"
+    "typescript": "3.5.2",
+    "validator": "^11.0.0"
   },
   "scripts": {
     "start": "rescripts start",
     "build": "rescripts build",
-    "test": "rescripts test",
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' mocha --require ts-node/register './src/**/*.spec.ts' && CI=1 react-scripts test",
     "eject": "react-scripts eject",
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "dist": "electron-builder --linux AppImage --mac zip --win nsis --publish always",
     "preelectron-pack": "npm run build",
-    "electron-pack": "build -mw ",
-    "e2e-test": "mocha --require @babel/register e2e"
+    "electron-pack": "build -mw --linux AppImage",
+    "e2e-test": "mocha --require @babel/register e2e",
+    "e2e-test-ci": "DBUS_SESSION_BUS_ADDRESS=/dev/null xvfb-run npm run e2e-test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -74,6 +78,8 @@
     "@babel/register": "^7.4.4",
     "@rescripts/cli": "0.0.10",
     "@rescripts/rescript-env": "0.0.10",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
     "casual": "^1.6.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -86,6 +92,7 @@
     "mocha": "^6.1.4",
     "prettier": "1.18.2",
     "spectron": "^7.0.0",
+    "ts-node": "^8.3.0",
     "wait-on": "^3.2.0"
   },
   "build": {

@@ -16,7 +16,18 @@ describe("e2e tests", function() {
 
   before(function() {
     this.app = new Application({
-      path: "./dist/mac/Physio Client 2.app/Contents/MacOS/Physio Client 2"
+      chromeDriverArgs: process.env.CI
+        ? [
+            "--whitelisted-ips",
+            "--headless",
+            "--no-sandbox",
+            "--disable-extensions"
+          ]
+        : null,
+      path:
+        process.platform === "darwin"
+          ? "./dist/mac/Physio Client 2.app/Contents/MacOS/Physio Client 2"
+          : "./dist/linux-unpacked/physioclient2"
     });
     return this.app.start();
   });
