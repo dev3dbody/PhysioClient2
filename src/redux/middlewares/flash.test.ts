@@ -15,14 +15,6 @@ describe("Flash messages middleware", () => {
         surname: "Jan",
         birthDate: "1970-01-01",
         comment: "somecomment"
-      },
-      {
-        flash: {
-          id: "1",
-          type: "success",
-          text: "Success message",
-          duration: 4000
-        }
       }
     );
     await flashMiddleware(store)(next)(action);
@@ -30,14 +22,14 @@ describe("Flash messages middleware", () => {
     const expectedAddAction = addFlashMessage(
       "1",
       "success",
-      "Success message",
-      4000
+      "Obiekt został zapisany",
+      3000
     );
     const expectedRemoveAction = removeFlashMessage("1");
     expect(store.dispatch).toBeCalledTimes(2);
     expect(store.dispatch.mock.calls[0][0]).toEqual(expectedAddAction);
     expect(store.dispatch.mock.calls[1][0]).toEqual(expectedRemoveAction);
     expect(setTimeout).toHaveBeenCalledTimes(1);
-    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 4000);
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 3000);
   });
 });

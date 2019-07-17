@@ -1,6 +1,5 @@
 import { createAction } from 'typesafe-actions';
 import { IScreen } from '../reducers/screen';
-import { IFlash } from '../reducers/flash';
 import { IModel, IResource, INewResource } from '../reducers/data';
 
 export const navigate = createAction('NAVIGATE', action => {
