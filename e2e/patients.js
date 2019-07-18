@@ -4,7 +4,21 @@ import casual from "casual";
 
 describe("patients", function() {
   it("top bar navigates back to patient list (after clicking somewhere else)", async () => {
-    // napisać test
+    await $('[data-cy="new-patient-hero"]').click();
+    const fields = ["first_name", "last_name"];
+    const values = {};
+    for (const field of fields) {
+      values[field] = casual[field];
+      await $(`[data-cy="${field}"] input`).setValue(values[field]);
+    }
+    await $("button.positive").click();
+    await wait(1);
+    await $('[data-cy="back-button"]').click();
+    await wait(1);
+    await $('[data-cy="menu-item"]')
+      .getText()
+      .should.eventually.equal("Wizyty")
+      .click();
   });
   it("when database is empty big button opens new patient form", async () => {
     await exists("form").should.eventually.be.false;
@@ -72,7 +86,7 @@ describe("patients", function() {
       await $('[data-cy="new-patient-hero"]').click();
       await exists("form").should.eventually.be.true;
     });
-    it.only("doesn't edit patient record on form cancel", async () => {
+    it("doesn't edit patient record on form cancel", async () => {
       await $('[data-cy="new-patient-hero"]').click();
       const name1 = casual.first_name;
       const name2 = casual.first_name;
@@ -99,10 +113,63 @@ describe("patients", function() {
   });
   describe("patient details", () => {
     it("modifies patient record visible on patient details and on patient list", async () => {
-      // napisać test
+      await $('[data-cy="new-patient-hero"]').click();
+      const name1 = casual.first_name;
+      const surname1 = casual.last_name;
+      const surname2 = casual.last_name;
+
+      await $(`[data-cy="first_name"] input`).setValue(name1);
+      await $(`[data-cy="last_name"] input`).setValue(surname1);
+      await $('[data-cy="patient-save-button"]').click();
+      await wait(1);
+      await $('[data-cy="dropdown-button-icon"]').click();
+      await wait(1);
+      await $("div.visible.menu.transition").click();
+      await wait(1);
+      await $(`[data-cy="last_name"] input`).setValue(surname2);
+      await wait(1);
+      await $('[data-cy="patient-save-button"]').click();
+      await wait(1);
+      await $('[data-cy="back-button"]').click();
+      await wait(1);
+      await $('[data-cy="data-name-cell"]')
+        .getText()
+        .should.eventually.equal(`${name1} ${surname2}`);
     });
     it("removes patient record and redirects back to patient list without removed record", async () => {
-      // napisać test
+      await $('[data-cy="new-patient-hero"]').click();
+      const name1 = casual.first_name;
+      const name2 = casual.first_name;
+      const surname1 = casual.last_name;
+      const surname2 = casual.last_name;
+
+      await $(`[data-cy="first_name"] input`).setValue(name1);
+      await $(`[data-cy="last_name"] input`).setValue(surname1);
+      await $('[data-cy="patient-save-button"]').click();
+      await wait(1);
+      await $(`[data-cy="back-button"]`).click();
+      await wait(1);
+      await $('[data-cy="new-patient"]').click();
+      await $(`[data-cy="first_name"] input`).setValue(name2);
+      await $(`[data-cy="last_name"] input`).setValue(surname2);
+      await $('[data-cy="patient-save-button"]').click();
+      await wait(1);
+      await $('[data-cy="back-button"]').click();
+      await wait(1);
+      await $('[data-cy="data-name-cell"]')
+        .getText()
+        .should.eventually.equal(`${name1} ${surname1}`)
+        .click();
+      await wait(1);
+      await $('[data-cy="dropdown-button-icon"]').click();
+      await wait(1);
+      await $("div.visible.menu.transition").click();
+      await wait(1);
+      await $('[data-cy="patient-delete-button"]').click();
+      await wait(1);
+      await $('[data-cy="data-name-cell"]')
+        .getText()
+        .should.eventually.equal(`${name2} ${surname2}`);
     });
   });
 });
