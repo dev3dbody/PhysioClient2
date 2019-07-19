@@ -84,7 +84,17 @@ describe("patients", function() {
     });
     it("shows validation errors", async () => {
       await $('[data-cy="new-patient-hero"]').click();
+      const name1 = casual.first_name;
       await exists("form").should.eventually.be.true;
+      await $('[data-cy="patient-save-button"]').click();
+      await wait(1);
+      await exists('[data-cy="validation-error-message"]').should.eventually.be
+        .true;
+      await $(`[data-cy="first_name"] input`).setValue(name1);
+      await $('[data-cy="patient-save-button"]').click();
+      await wait(1);
+      await exists('[data-cy="validation-error-message"]').should.eventually.be
+        .true;
     });
     it("doesn't edit patient record on form cancel", async () => {
       await $('[data-cy="new-patient-hero"]').click();
