@@ -36,7 +36,11 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
             </Header>
           </Grid.Column>
           <Grid.Column>
-            <Button.Group primary floated="right">
+            <Button.Group
+              primary
+              floated="right"
+              onClick={() => dispatch(navigate("ADD_APPOINTMENT"))}
+            >
               <Button primary>
                 <Icon name="add to calendar" />
                 Nowa wizyta
