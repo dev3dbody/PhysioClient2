@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';   // TS type
 
-import { addFlashMessage, removeFlashMessage } from '../actions/flash'
+import { addFlashMessage, removeFlashMessage } from '../actions'
 
 // flash messages middleware
 // checks for meta.flash
