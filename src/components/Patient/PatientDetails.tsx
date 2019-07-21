@@ -1,8 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
+import {
+  Container,
+  Grid,
+  Button,
+  Dropdown,
+  Header,
+  Icon,
+  Segment,
+  Image
+} from "semantic-ui-react";
 import { getCurrentPatient } from "../../redux/reducers";
 import { edit, navigate } from "../../redux/actions";
+import AppointmentList from "../Appointment/AppointmentList";
 
 const PatientDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
@@ -13,37 +23,78 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
   }
 
   return (
-    <>
-      <Button.Group floated="right">
-        <Button primary onClick={() => dispatch(navigate("ADD_APPOINTMENT"))}>
-          <Icon name="add to calendar" />
-          Nowa wizyta
-        </Button>
-        <Dropdown
-          onChange={() => {
-            console.info("onc");
-            dispatch(edit("patients", patient._id));
-          }}
-          className="button icon"
-          options={[
-            { key: "edit", icon: "edit", text: "Modyfikuj", value: "edit" }
-          ]}
-          trigger={<React.Fragment />}
-        />
-      </Button.Group>
-      <Header as="h2">
-        <Icon name="user circle" />
-        <Header.Content>
-          {patient.name} {patient.surname}
-          <Header.Subheader>Szczegóły Pacjenta</Header.Subheader>
-        </Header.Content>
-      </Header>
-      <Segment>TUTAJ DANE PACJENTA</Segment>
-      <Segment>TUTAJ OSTATNIE WIZYTY</Segment>
+    <Container>
+      <Grid columns="equal">
+        <Grid.Row>
+          <Grid.Column>
+            <Header as="h2">
+              <Icon name="user circle" />
+              <Header.Content>
+                {patient.name} {patient.surname}
+                <Header.Subheader>Szczegóły Pacjenta</Header.Subheader>
+              </Header.Content>
+            </Header>
+          </Grid.Column>
+          <Grid.Column>
+            <Button.Group primary floated="right">
+              <Button primary>
+                <Icon name="add to calendar" />
+                Nowa wizyta
+              </Button>
+              <Dropdown
+                floating
+                onChange={() => {
+                  console.info("onc");
+                  dispatch(edit("patients", patient._id));
+                }}
+                className="button icon"
+                options={[
+                  {
+                    key: "edit",
+                    icon: "edit",
+                    text: "Modyfikuj",
+                    value: "edit"
+                  }
+                ]}
+                trigger={<React.Fragment />}
+              />
+            </Button.Group>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+      <Grid divided style={{ paddingTop: "0.5em" }}>
+        <Grid.Row>
+          <Grid.Column width={7} style={{ padding: "0 2em 3em 0" }}>
+            <p>
+              <strong>Data urodzenia: </strong>
+              {patient.birthDate}
+            </p>
+            <p>
+              <strong>Ostatnia wizyta: </strong>24.05.2017
+            </p>
+            <Header as="h4">Inne informacje:</Header>
+            <Segment>
+              {patient.comment.split("\n").map((line, key) => (
+                <p key={key}>{line}</p>
+              ))}
+            </Segment>
+            <Header as="h3" style={{ margin: "2em 0 1em 0" }}>
+              Ostatnie wizyty
+            </Header>
+            <AppointmentList patientId={patient._id} />
+          </Grid.Column>
+          <Grid.Column width={9} style={{ padding: "0 0 3em 2em" }}>
+            <Header as="h4">Ostatnie badanie - 02.02.2017, 09:00</Header>
+            <Segment>
+              <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
       <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
-        <Icon name="arrow left" /> Wróć
+        <Icon name="arrow left" /> Wróć do listy pacjentów
       </Button>
-    </>
+    </Container>
   );
 };
 
