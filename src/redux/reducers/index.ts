@@ -7,7 +7,8 @@ import loading, { ILoading } from './loading';
 import * as fromCurrent from './current';
 import current, { ICurrent } from './current';
 import flash, { IFlash } from './flash';
-import _ from 'lodash'
+import _ from 'lodash';
+import moment from 'moment';
 
 export interface IState {
   screen: IScreen;
@@ -30,7 +31,7 @@ export const getPatientById = (state: IState, id: string) =>
 export const getPatientsCount = (state: IState) =>
   fromData.getPatientsCount(state.data);
 export const getAppointments = (state: IState) =>
-  fromData.getAppointments(state.data);
+  _.reverse(_.sortBy(fromData.getAppointments(state.data), appointment => moment(appointment.visitDate).format('X')));
 export const getAppointmentById = (state: IState, id: string) =>
   fromData.getAppointmentById(state.data, id);
 export const getAppointmentsCount = (state: IState) =>
