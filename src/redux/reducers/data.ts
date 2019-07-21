@@ -18,7 +18,7 @@ interface IPatient {
   comment: string;
 }
 
-export interface IAppointment {
+interface IAppointment {
   _id: string;
   _rev: string;
   visitDate: string;
