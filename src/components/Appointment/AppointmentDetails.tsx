@@ -46,7 +46,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
         ))}
       </Segment>
       <Button onClick={() => dispatch(details("patients", patient._id))} basic>
-        <Icon name="arrow left" /> Wróć
+        <Icon name="arrow left" /> wróć do szczegółów pacjenta
       </Button>
     </>
   );

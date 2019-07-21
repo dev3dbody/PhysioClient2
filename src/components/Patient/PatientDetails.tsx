@@ -1,8 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Segment, Button, Dropdown, Header, Icon } from "semantic-ui-react";
+import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
 import { getCurrentPatient } from "../../redux/reducers";
 import { edit, navigate } from "../../redux/actions";
+import AppointmentList from "../Appointment/AppointmentList";
 
 const PatientDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
@@ -39,9 +40,9 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
         </Header.Content>
       </Header>
       <Segment>TUTAJ DANE PACJENTA</Segment>
-      <Segment>TUTAJ OSTATNIE WIZYTY</Segment>
+      <AppointmentList patientId={patient._id} />
       <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
-        <Icon name="arrow left" /> Wróć
+        <Icon name="arrow left" /> Wróć do listy pacjentów
       </Button>
     </>
   );

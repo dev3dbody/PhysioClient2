@@ -1,11 +1,5 @@
-import { createReducer } from 'typesafe-actions';
-import {
-  IAction,
-  listSuccess,
-  createSuccess,
-  updateSuccess,
-  removeSuccess,
-} from '../actions';
+import { createReducer } from "typesafe-actions";
+import { createSuccess, IAction, listSuccess, removeSuccess, updateSuccess } from "../actions";
 
 export type IModel = 'patients' | 'appointments' | 'scans';
 
@@ -24,7 +18,7 @@ interface IPatient {
   comment: string;
 }
 
-interface IAppointment {
+export interface IAppointment {
   _id: string;
   _rev: string;
   visitDate: string;
