@@ -110,9 +110,7 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
                   Zapisz
                 </Button>
                 <Button.Or text="lub" />
-                <Button
-                  onClick={() => dispatch(details("patients", patientId))}
-                >
+                <Button onClick={() => dispatch(details(patientId))}>
                   Anuluj
                 </Button>
               </Button.Group>

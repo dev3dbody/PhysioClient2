@@ -85,7 +85,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
             <Header as="h3" style={{ margin: "2em 0 1em 0" }}>
               Ostatnie wizyty
             </Header>
-            <AppointmentList patientId={patient._id} />
+            <AppointmentList />
           </Grid.Column>
           <Grid.Column width={9} style={{ padding: "0 0 3em 2em" }}>
             <Header as="h4">Ostatnie badanie - 02.02.2017, 09:00</Header>
