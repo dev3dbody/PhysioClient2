@@ -45,7 +45,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
           <p key={key}>{line}</p>
         ))}
       </Segment>
-      <Button onClick={() => dispatch(details("patients", patient._id))} basic>
+      <Button onClick={() => dispatch(details(patient._id))} basic>
         <Icon name="arrow left" /> wróć do szczegółów pacjenta
       </Button>
     </>

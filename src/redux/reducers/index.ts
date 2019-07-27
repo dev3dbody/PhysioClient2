@@ -25,13 +25,19 @@ export const getScreen = (state: IState) => state.screen;
 
 export const getData = (state: IState) => state.data;
 export const getPatients = (state: IState) =>
-  _.sortBy(fromData.getPatients(state.data), patient => patient.surname.toLowerCase());
+  _.sortBy(fromData.getPatients(state.data), patient =>
+    patient.surname.toLowerCase()
+  );
 export const getPatientById = (state: IState, id: string) =>
   fromData.getPatientById(state.data, id);
 export const getPatientsCount = (state: IState) =>
   fromData.getPatientsCount(state.data);
 export const getAppointments = (state: IState) =>
-  _.reverse(_.sortBy(fromData.getAppointments(state.data), appointment => moment(appointment.visitDate).format('X')));
+  _.reverse(
+    _.sortBy(fromData.getAppointments(state.data), appointment =>
+      moment(appointment.visitDate).format('X')
+    )
+  );
 export const getAppointmentById = (state: IState, id: string) =>
   fromData.getAppointmentById(state.data, id);
 export const getAppointmentsCount = (state: IState) =>
@@ -80,5 +86,19 @@ export const getCurrentScan = (state: IState) => {
   return undefined;
 };
 export const getFlashes = (state: IState) => {
-  return state.flash
+  return state.flash;
+};
+
+export const getAppointmentsWithPatients = (state: IState) => {
+  const currentPatientId = getPatientsCurrent(state);
+
+  return (currentPatientId
+    ? getAppointments(state).filter(
+        ({ patientId }) => patientId === currentPatientId
+      )
+    : getAppointments(state)
+  ).map(appointment => ({
+    ...appointment,
+    patient: getPatientById(state, appointment.patientId),
+  }));
 };
