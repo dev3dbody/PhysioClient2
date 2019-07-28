@@ -21,7 +21,7 @@ const Navigation: React.FunctionComponent = () => {
     <Menu data-cy="navigation" size="massive" pointing>
       {items.map(({ name, actions }: { name: string; actions: IScreen[] }) => (
         <Menu.Item
-          data-cy="menu-item"
+          data-cy={`top-navigation-${actions[0]}`}
           key={name}
           name={name}
           active={_.indexOf(actions, activeScreen) !== -1}

@@ -1,27 +1,16 @@
-import { describe, it } from "mocha";
+import { beforeEach, describe, it } from "mocha";
 import { exists, $, wait } from "./index";
 import casual from "casual";
+import PouchDb from "pouchdb";
 
 describe("patients", function() {
   it("top bar navigates back to patient list (after clicking somewhere else)", async () => {
-    await $('[data-cy="new-patient-hero"]').click();
-    const fields = ["first_name", "last_name"];
-    const values = {};
-    for (const field of fields) {
-      values[field] = casual[field];
-      await $(`[data-cy="${field}"] input`).setValue(values[field]);
-    }
-    await $("button.positive").click();
-    await wait(1);
-    await $('[data-cy="back-button"]').click();
-    await wait(1);
-    await $('[data-cy="menu-item"]')
-      .getText()
-      .should.eventually.equal("Wizyty")
-      .click();
+    await $('[data-cy="top-navigation-APPOINTMENT"]').click();
+    await exists('[data-cy="new-patient-hero"]').should.eventually.be.false;
+    await $('[data-cy="top-navigation-PATIENT"]').click();
+    await exists('[data-cy="new-patient-hero"]').should.eventually.be.true;
   });
   it("when database is empty big button opens new patient form", async () => {
-    await exists("form").should.eventually.be.false;
     await $('[data-cy="new-patient-hero"]').click();
     await exists("form").should.eventually.be.true;
   });
@@ -78,7 +67,7 @@ describe("patients", function() {
     it("doesn't add new patient on form cancel", async () => {
       await $('[data-cy="new-patient-hero"]').click();
       await exists("form").should.eventually.be.true;
-      await $('[data-cy="cancel-button"]').click();
+      await $('[data-cy="patient-cancel-button"]').click();
       await exists("form").should.eventually.be.false;
       await exists('[data-cy="new-patient-hero"]').should.eventually.be.true;
     });
