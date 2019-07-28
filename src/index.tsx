@@ -8,6 +8,7 @@ import App from "./App";
 import reducer from "./redux/reducers";
 import database from "./redux/middlewares/database";
 import flash from "./redux/middlewares/flash";
+import "moment/locale/pl";
 
 declare global {
   interface Window {
