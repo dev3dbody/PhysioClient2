@@ -1,0 +1,405 @@
+import * as THREE from "three";
+import React from "react";
+import "./style.css";
+import { Dimmer, Loader, Button } from "semantic-ui-react";
+import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+
+import {
+  changeCameraKeys,
+  ROTATE_KEY_CODE,
+  CAM_DISTANCE,
+  changeCameraTopBottomKeys,
+  meshRotatationMatrix
+} from "./config";
+
+/* jslint browser: true */
+/* global window */
+
+class MeshViewer extends React.Component<
+  { data: any },
+  { toggleRotate: boolean }
+> {
+  scene: THREE.Scene;
+  loading: boolean;
+  canvas: any;
+  cameraTarget!: THREE.Vector3;
+  camera!: THREE.PerspectiveCamera;
+  renderer!: THREE.WebGLRenderer;
+  canvasAxes: any;
+  canvasAxesRenderer!: THREE.WebGLRenderer;
+  canvasAxesScene!: THREE.Scene;
+  canvasAxesCamera!: THREE.PerspectiveCamera;
+  controls!: TrackballControls;
+  transfromControl: any;
+  frameId!: number;
+  mesh: any;
+
+  constructor(props: Readonly<{ data: any }>) {
+    super(props);
+
+    this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
+    this.animate = this.animate.bind(this);
+    this.scene = new THREE.Scene();
+    this.renderGeometry = this.renderGeometry.bind(this);
+    this.animate = this.animate.bind(this);
+
+    this.state = {
+      toggleRotate: false
+    };
+
+    this.loading = true;
+
+    window.addEventListener("keydown", this.onKeyDown, false);
+    window.addEventListener("resize", this.onWindowResize, false);
+  }
+
+  componentDidMount() {
+    // [Default Canvas]
+    const width = this.canvas.clientWidth;
+    const height = this.canvas.clientHeight;
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(35, width / height, 1, 15);
+    this.cameraTarget = new THREE.Vector3(0, -0.25, 0);
+    camera.position.set(0, 0.15, 4);
+    this.camera = camera;
+
+    // Ground
+    const plane = new THREE.Mesh(
+      new THREE.PlaneBufferGeometry(100, 100),
+      new THREE.MeshPhongMaterial({
+        color: 0x999999,
+        specular: 0x101010
+      })
+    );
+    plane.rotation.x = -Math.PI / 2;
+    plane.position.y = -0.75;
+    this.scene.add(plane);
+    plane.receiveShadow = false;
+
+    // Lights
+    this.scene.add(new THREE.HemisphereLight(0x443333, 0x111122));
+    this.scene.fog = new THREE.Fog(0x72645b, 2, 15);
+
+    // Renderer
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
+    this.renderer.setClearColor(this.scene.fog.color);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(width, height);
+    this.renderer.gammaInput = true;
+    this.renderer.gammaOutput = true;
+    this.renderer.shadowMap.enabled = true;
+    // this.renderer.shadowMap.renderReverseSided = THREE.CullFaceBack; //@todo
+
+    // Shadow Light
+    this.addShadowedLight(1, 1, 1, 0xffffff, 1.35);
+    this.addShadowedLight(0.5, 1, -1, 0xffaa00, 1);
+    this.addShadowedLight(-1, 1, 1, 0xffffff, 0.5);
+    this.addShadowedLight(-1, 1, -1, 0xffffff, 0.5);
+
+    this.canvas.appendChild(this.renderer.domElement);
+
+    // [canvasAxes]
+    const axesWidth = this.canvasAxes.clientWidth;
+    const axesHeight = this.canvasAxes.clientHeight;
+
+    // canvasAxes - Renderer
+    const canvasAxesRenderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true
+    });
+    canvasAxesRenderer.setClearColor(0x000000, 0);
+    canvasAxesRenderer.setSize(axesWidth, axesHeight);
+
+    this.canvasAxes.appendChild(canvasAxesRenderer.domElement);
+
+    // canvasAxes - Scene
+    const canvasAxesScene = new THREE.Scene();
+
+    // canvasAxes - Camera
+    const canvasAxesCamera = new THREE.PerspectiveCamera(
+      50,
+      axesWidth / axesHeight,
+      1,
+      1000
+    );
+    canvasAxesCamera.up = camera.up; // important!
+
+    // canvasAxes - Axes
+    const axes2 = new THREE.AxesHelper(100);
+    canvasAxesScene.add(axes2);
+
+    this.canvasAxesRenderer = canvasAxesRenderer;
+    this.canvasAxesScene = canvasAxesScene;
+    this.canvasAxesCamera = canvasAxesCamera;
+
+    this.initControls();
+    this.start();
+  }
+
+  initControls() {
+    const controls = new TrackballControls(
+      this.camera,
+      this.renderer.domElement
+    );
+    controls.rotateSpeed = 2.5;
+    controls.zoomSpeed = 10;
+    controls.panSpeed = 1.2;
+    controls.noZoom = false;
+    controls.noPan = false;
+    controls.staticMoving = true;
+    controls.dynamicDampingFactor = 0.3;
+    controls.keys = [65, 83, 68];
+    controls.minDistance = 2;
+    controls.maxDistance = 10;
+
+    this.controls = controls;
+
+    if (!this.transfromControl) {
+      const transfromControl = new TransformControls(
+        this.camera,
+        this.renderer.domElement
+      );
+
+      this.scene.add(transfromControl);
+      transfromControl.setMode("rotate");
+
+      transfromControl.addEventListener("change", () => this.renderScene);
+      transfromControl.addEventListener("dragging-changed", event => {
+        this.controls.enabled = !event.value;
+      });
+
+      this.transfromControl = transfromControl;
+    }
+  }
+
+  updateTransformControls() {
+    const toggleRotate = this.state.toggleRotate;
+    this.transfromControl.visible = toggleRotate;
+    this.transfromControl.enabled = toggleRotate;
+  }
+
+  addShadowedLight(
+    x: number,
+    y: number,
+    z: number,
+    color: string | number | THREE.Color | undefined,
+    intensity: number | undefined
+  ) {
+    const directionalLight = new THREE.DirectionalLight(color, intensity);
+    const d = 1;
+
+    directionalLight.position.set(x, y, z);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.camera.left = -d;
+    directionalLight.shadow.camera.right = d;
+    directionalLight.shadow.camera.top = d;
+    directionalLight.shadow.camera.bottom = -d;
+    directionalLight.shadow.camera.near = 1;
+    directionalLight.shadow.camera.far = 4;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.bias = -0.005;
+
+    this.scene.add(directionalLight);
+  }
+
+  componentWillUnmount() {
+    this.stop();
+    this.canvas.removeChild(this.renderer.domElement);
+  }
+
+  onWindowResize = () => {
+    this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+  };
+
+  start() {
+    if (!this.frameId) {
+      this.frameId = requestAnimationFrame(this.animate);
+    }
+  }
+
+  stop() {
+    cancelAnimationFrame(this.frameId);
+  }
+
+  updateAxesPosition() {
+    this.canvasAxesCamera.position.copy(this.camera.position);
+    this.canvasAxesCamera.position.sub(this.controls.target);
+    this.canvasAxesCamera.position.setLength(CAM_DISTANCE);
+    this.canvasAxesCamera.lookAt(this.canvasAxesScene.position);
+  }
+
+  animate() {
+    this.frameId = window.requestAnimationFrame(this.animate);
+    this.controls.update();
+    this.updateAxesPosition();
+    this.renderScene();
+  }
+
+  resetCamera() {
+    this.controls.reset();
+    this.cameraTarget = new THREE.Vector3(0, -0.25, 0);
+    this.camera.position.set(0, 0.15, 4);
+    this.transfromControl.setMode("rotate");
+  }
+
+  changeCamera(placement: string) {
+    this.resetCamera();
+    this.mesh.position.y = 0.25;
+    this.mesh.rotation.y = 0;
+    this.mesh.rotation.x = -Math.PI / 2;
+    this.mesh.rotation.z = meshRotatationMatrix[placement].angle;
+    this.renderScene();
+    this.updateAxesPosition();
+  }
+
+  changeCameraTopBottom(placement: string) {
+    this.resetCamera();
+    this.mesh.position.y = 0.25;
+    this.mesh.rotation.y = 0;
+    this.mesh.rotation.x = meshRotatationMatrix[placement].angle;
+    this.renderScene();
+    this.updateAxesPosition();
+  }
+
+  onKeyDown = ({ keyCode }: { keyCode: number }) => {
+    const activeElement = document.activeElement
+      ? document.activeElement.tagName.toLowerCase()
+      : null;
+
+    if (!this.mesh || activeElement === "input") {
+      return false;
+    }
+
+    if (Object.keys(changeCameraKeys).includes(keyCode.toString())) {
+      this.changeCamera(changeCameraKeys[keyCode]);
+    }
+
+    if (Object.keys(changeCameraTopBottomKeys).includes(keyCode.toString())) {
+      this.changeCameraTopBottom(changeCameraTopBottomKeys[keyCode]);
+    }
+
+    if (keyCode === ROTATE_KEY_CODE) {
+      this.onToggleRotate();
+    }
+  };
+
+  onToggleRotate = () => {
+    this.setState(
+      prevState => ({
+        toggleRotate: !prevState.toggleRotate
+      }),
+      () => {
+        this.updateTransformControls();
+        this.renderScene();
+      }
+    );
+  };
+
+  renderGeometry(
+    geometry: any | THREE.BufferGeometry | THREE.Geometry | undefined
+  ) {
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x0055ff
+    });
+    geometry.computeFaceNormals();
+    this.mesh = new THREE.Mesh(geometry, material);
+    this.mesh.position.y = 0.25;
+    this.mesh.rotation.x = -Math.PI / 2;
+    this.mesh.scale.multiplyScalar(0.001);
+    this.mesh.castShadow = true;
+    this.mesh.receiveShadow = true;
+    this.scene.add(this.mesh);
+
+    this.transfromControl.attach(this.mesh);
+    this.scene.add(this.transfromControl);
+    this.updateTransformControls();
+
+    this.loading = false;
+  }
+
+  renderScene() {
+    this.renderer.render(this.scene, this.camera);
+    this.canvasAxesRenderer.render(this.canvasAxesScene, this.canvasAxesCamera);
+  }
+
+  render() {
+    const { data } = this.props;
+
+    if (data !== null && !this.mesh) {
+      const loader = new PLYLoader();
+      this.renderGeometry(loader.parse(data));
+    }
+
+    return (
+      <div className="mesh-canvas-wrapper">
+        <div>
+          <Dimmer active={this.loading}>
+            <Loader size="medium">Ładowanie...</Loader>
+          </Dimmer>
+          <div
+            style={{ width: "100%", height: "700px" }}
+            ref={canvas => {
+              this.canvas = canvas;
+            }}
+          />
+          <div
+            className="mesh-axes-helper"
+            style={{ width: "100px", height: "100px" }}
+            ref={canvas => {
+              this.canvasAxes = canvas;
+            }}
+          />
+
+          <div className="button-group-wrapper">
+            <Button.Group compact size="small">
+              <Button title="1" onClick={() => this.changeCamera("left")}>
+                Lewa
+              </Button>
+              <Button title="2" onClick={() => this.changeCamera("right")}>
+                Prawa
+              </Button>
+              <Button title="3" onClick={() => this.changeCamera("front")}>
+                Przód
+              </Button>
+              <Button title="4" onClick={() => this.changeCamera("back")}>
+                Tył
+              </Button>
+              <Button
+                title="5"
+                onClick={() => this.changeCameraTopBottom("top")}
+              >
+                Góra
+              </Button>
+              <Button
+                title="6"
+                onClick={() => this.changeCameraTopBottom("bottom")}
+              >
+                Dół
+              </Button>
+            </Button.Group>{" "}
+            <Button.Group compact size="small" labeled icon>
+              <Button
+                title="o"
+                icon="sync"
+                content="Obracaj"
+                onClick={() => this.onToggleRotate()}
+                primary={this.state.toggleRotate}
+              />
+            </Button.Group>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default MeshViewer;
