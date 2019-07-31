@@ -11,7 +11,7 @@ import {
   ROTATE_KEY_CODE,
   CAM_DISTANCE,
   changeCameraTopBottomKeys,
-  meshRotatationMatrix
+  meshRotationMatrix
 } from "./config";
 
 /* jslint browser: true */
@@ -32,25 +32,18 @@ class MeshViewer extends React.Component<
   canvasAxesScene!: THREE.Scene;
   canvasAxesCamera!: THREE.PerspectiveCamera;
   controls!: TrackballControls;
-  transfromControl: any;
+  transformControl: any;
   frameId!: number;
   mesh: any;
 
   constructor(props: Readonly<{ data: any }>) {
     super(props);
 
-    this.start = this.start.bind(this);
-    this.stop = this.stop.bind(this);
-    this.animate = this.animate.bind(this);
     this.scene = new THREE.Scene();
-    this.renderGeometry = this.renderGeometry.bind(this);
-    this.animate = this.animate.bind(this);
-
+    this.loading = true;
     this.state = {
       toggleRotate: false
     };
-
-    this.loading = true;
 
     window.addEventListener("keydown", this.onKeyDown, false);
     window.addEventListener("resize", this.onWindowResize, false);
@@ -160,28 +153,28 @@ class MeshViewer extends React.Component<
 
     this.controls = controls;
 
-    if (!this.transfromControl) {
-      const transfromControl = new TransformControls(
+    if (!this.transformControl) {
+      const transformControl = new TransformControls(
         this.camera,
         this.renderer.domElement
       );
 
-      this.scene.add(transfromControl);
-      transfromControl.setMode("rotate");
+      this.scene.add(transformControl);
+      transformControl.setMode("rotate");
 
-      transfromControl.addEventListener("change", () => this.renderScene);
-      transfromControl.addEventListener("dragging-changed", event => {
+      transformControl.addEventListener("change", () => this.renderScene);
+      transformControl.addEventListener("dragging-changed", event => {
         this.controls.enabled = !event.value;
       });
 
-      this.transfromControl = transfromControl;
+      this.transformControl = transformControl;
     }
   }
 
   updateTransformControls() {
     const toggleRotate = this.state.toggleRotate;
-    this.transfromControl.visible = toggleRotate;
-    this.transfromControl.enabled = toggleRotate;
+    this.transformControl.visible = toggleRotate;
+    this.transformControl.enabled = toggleRotate;
   }
 
   addShadowedLight(
@@ -222,7 +215,7 @@ class MeshViewer extends React.Component<
 
   start() {
     if (!this.frameId) {
-      this.frameId = requestAnimationFrame(this.animate);
+      this.frameId = requestAnimationFrame(() => this.animate());
     }
   }
 
@@ -238,7 +231,7 @@ class MeshViewer extends React.Component<
   }
 
   animate() {
-    this.frameId = window.requestAnimationFrame(this.animate);
+    this.frameId = window.requestAnimationFrame(() => this.animate());
     this.controls.update();
     this.updateAxesPosition();
     this.renderScene();
@@ -248,7 +241,7 @@ class MeshViewer extends React.Component<
     this.controls.reset();
     this.cameraTarget = new THREE.Vector3(0, -0.25, 0);
     this.camera.position.set(0, 0.15, 4);
-    this.transfromControl.setMode("rotate");
+    this.transformControl.setMode("rotate");
   }
 
   changeCamera(placement: string) {
@@ -256,7 +249,7 @@ class MeshViewer extends React.Component<
     this.mesh.position.y = 0.25;
     this.mesh.rotation.y = 0;
     this.mesh.rotation.x = -Math.PI / 2;
-    this.mesh.rotation.z = meshRotatationMatrix[placement].angle;
+    this.mesh.rotation.z = meshRotationMatrix[placement].angle;
     this.renderScene();
     this.updateAxesPosition();
   }
@@ -265,7 +258,7 @@ class MeshViewer extends React.Component<
     this.resetCamera();
     this.mesh.position.y = 0.25;
     this.mesh.rotation.y = 0;
-    this.mesh.rotation.x = meshRotatationMatrix[placement].angle;
+    this.mesh.rotation.x = meshRotationMatrix[placement].angle;
     this.renderScene();
     this.updateAxesPosition();
   }
@@ -319,8 +312,8 @@ class MeshViewer extends React.Component<
     this.mesh.receiveShadow = true;
     this.scene.add(this.mesh);
 
-    this.transfromControl.attach(this.mesh);
-    this.scene.add(this.transfromControl);
+    this.transformControl.attach(this.mesh);
+    this.scene.add(this.transformControl);
     this.updateTransformControls();
 
     this.loading = false;
