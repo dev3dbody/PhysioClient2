@@ -1,15 +1,15 @@
-interface meshRotatationMatrix {
+interface meshRotatationMatrixInterface {
   [key: string]: {
     angle: number,
     offsetX: undefined | any
   }
 }
 
-interface changeCameraKeys {
+interface changeCameraKeysInterface {
   [key: number]: string
 }
 
-const meshRotatationMatrix: meshRotatationMatrix = {
+const meshRotatationMatrix: meshRotatationMatrixInterface = {
   left: {
     offsetX: 0,
     angle: -Math.PI / 2,
@@ -36,14 +36,14 @@ const meshRotatationMatrix: meshRotatationMatrix = {
   }
 }
 
-const changeCameraKeys: changeCameraKeys = {
+const changeCameraKeys: changeCameraKeysInterface = {
   49: 'left',
   50: 'right',
   51: 'front',
   52: 'back',
 };
 
-const changeCameraTopBottomKeys: changeCameraKeys= {
+const changeCameraTopBottomKeys: changeCameraKeysInterface= {
   53: 'top',
   54: 'bottom',
 };
