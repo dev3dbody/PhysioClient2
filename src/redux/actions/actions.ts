@@ -7,7 +7,7 @@ export const navigate = createAction('NAVIGATE', action => {
 });
 
 export const listRequest = createAction('LIST_REQUEST', action => {
-  return (model: IModel ) => action({ model });
+  return (model: IModel) => action({ model });
 });
 export const createRequest = createAction('CREATE_REQUEST', action => {
   return (model: IModel, resource: INewResource) => action({ model, resource });
@@ -23,14 +23,30 @@ export const listSuccess = createAction('LIST_SUCCESS', action => {
   return (model: IModel, data: IResource[]) => action({ model, data });
 });
 export const createSuccess = createAction('CREATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource) => action(
-    { model, resource },
-    { flash: { duration: 3000, type: "success", text: 'Obiekt został zapisany' } });
+  return (model: IModel, resource: IResource) =>
+    action(
+      { model, resource },
+      {
+        flash: {
+          duration: 3000,
+          type: 'success',
+          text: 'Obiekt został zapisany',
+        },
+      }
+    );
 });
 export const updateSuccess = createAction('UPDATE_SUCCESS', action => {
-  return (model: IModel, resource: IResource) => action(
-    { model, resource },
-    { flash: { duration: 3000, type: "success", text: 'Zmiany zostały zapisane' } });
+  return (model: IModel, resource: IResource) =>
+    action(
+      { model, resource },
+      {
+        flash: {
+          duration: 3000,
+          type: 'success',
+          text: 'Zmiany zostały zapisane',
+        },
+      }
+    );
 });
 export const removeSuccess = createAction('REMOVE_SUCCESS', action => {
   return (model: IModel, id: string) => action({ model, id });
@@ -51,7 +67,8 @@ export const edit = createAction('EDIT', action => {
   return (model: IModel, id: string) => action({ model, id });
 });
 export const details = createAction('DETAILS', action => {
-  return (model: IModel, id: string) => action({ model, id });
+  return (patientId: string, appointmentId?: string, scanId?: string) =>
+    action({ patientId, appointmentId, scanId });
 });
 
 export * from './flash';

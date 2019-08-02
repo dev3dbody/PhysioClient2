@@ -1,18 +1,18 @@
 import { createReducer } from 'typesafe-actions';
 import {
+  createSuccess,
   IAction,
   listSuccess,
-  createSuccess,
-  updateSuccess,
   removeSuccess,
+  updateSuccess,
 } from '../actions';
 
 export type IModel = 'patients' | 'appointments' | 'scans';
 
 export interface IData {
-  patients: IPatient[];
-  appointments: IAppointment[];
-  scans: IScan[];
+  patients: { allIds: string[]; byId: { [index: string]: IPatient } };
+  appointments: { allIds: string[]; byId: { [index: string]: IAppointment } };
+  scans: { allIds: string[]; byId: { [index: string]: IScan } };
 }
 
 interface IPatient {
@@ -43,57 +43,80 @@ interface IScan {
 export type IResource = IPatient | IAppointment | IScan;
 
 export type INewPatient = Omit<IPatient, '_id' | '_rev'>;
-type INewAppointment = Omit<IAppointment, '_id' | '_rev'>;
+export type INewAppointment = Omit<IAppointment, '_id' | '_rev'>;
 type INewScan = Omit<IScan, '_id' | '_rev'>;
 
 export type INewResource = INewPatient | INewAppointment | INewScan;
 
 const initData = {
-  patients: [],
-  appointments: [],
-  scans: [],
+  patients: { byId: {}, allIds: [] },
+  appointments: { byId: {}, allIds: [] },
+  scans: { byId: {}, allIds: [] },
 };
 
 const data = createReducer<IData, IAction>(initData)
-  .handleAction(listSuccess, (state, action) => ({
+  .handleAction(listSuccess, (state, { payload: { model, data } }) => ({
     ...state,
-    [action.payload.model]: action.payload.data,
-  }))
-  .handleAction(createSuccess, (state, action) => ({
-    ...state,
-    [action.payload.model]: [
-      ...state[action.payload.model],
-      action.payload.resource,
-    ],
-  }))
-  .handleAction(updateSuccess, (state, action) => ({
-    ...state,
-    [action.payload.model]: [
-      ...(state[action.payload.model] as IResource[]).filter(
-        ({ _id }) => _id !== action.payload.resource._id,
+    [model]: {
+      allIds: data.map(({ _id }) => _id),
+      byId: data.reduce(
+        (result, current) => ({ ...result, [current._id]: current }),
+        {}
       ),
-      action.payload.resource,
-    ],
+    },
   }))
-  .handleAction(removeSuccess, (state, action) => ({
+  .handleAction(createSuccess, (state, { payload: { model, resource } }) => ({
     ...state,
-    [action.payload.model]: (state[action.payload.model] as IResource[]).filter(
-      ({ _id }) => _id !== action.payload.id,
-    ),
-  }));
+    [model]: {
+      allIds: [...state[model].allIds, resource._id],
+      byId: {
+        ...state[model].byId,
+        [resource._id]: resource,
+      },
+    },
+  }))
+  .handleAction(updateSuccess, (state, { payload: { model, resource } }) => ({
+    ...state,
+    [model]: {
+      ...state[model],
+      byId: {
+        ...state[model].byId,
+        [resource._id]: resource,
+      },
+    },
+  }))
+  .handleAction(removeSuccess, (state, { payload: { id, model } }) => {
+    const { [id]: omitVar, ...byId } = state[model].byId;
+    return {
+      ...state,
+      [model]: {
+        allIds: state[model].allIds.filter(currId => currId !== id),
+        byId,
+      },
+    };
+  });
 
 export default data;
 
-export const getPatients = (state: IData) => state.patients;
+export const getPatients = (state: IData) =>
+  state.patients.allIds.map(id => state.patients.byId[id]);
 export const getPatientById = (state: IData, id: string) =>
-  state.patients.find(({ _id }) => _id === id);
-export const getPatientsCount = (state: IData) => getPatients(state).length;
-export const getAppointments = (state: IData) => state.appointments;
+  state.patients.byId[id];
+export const getPatientsCount = (state: IData) => state.patients.allIds.length;
+export const getAppointments = (state: IData) =>
+  state.appointments.allIds.map(id => state.appointments.byId[id]);
 export const getAppointmentById = (state: IData, id: string) =>
-  state.appointments.find(({ _id }) => _id === id);
+  state.appointments.byId[id];
 export const getAppointmentsCount = (state: IData) =>
-  getAppointments(state).length;
-export const getScans = (state: IData) => state.scans;
-export const getScansCount = (state: IData) => getScans(state).length;
-export const getScanById = (state: IData, id: string) =>
-  state.scans.find(({ _id }) => _id === id);
+  state.appointments.allIds.length;
+export const getScans = (state: IData) =>
+  state.scans.allIds.map(id => state.scans.byId[id]);
+export const getScansCount = (state: IData) => state.scans.allIds.length;
+export const getScanById = (state: IData, id: string) => state.scans.byId[id];
+
+export const getAppointmentsWithPatients = (state: IData) => {
+  return getAppointments(state).map(appointment => ({
+    ...appointment,
+    patient: getPatientById(state, appointment.patientId),
+  }));
+};

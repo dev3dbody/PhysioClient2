@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { getFlashes } from "../../redux/reducers";
 import "./index.css";
 import { SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
-import { removeFlashMessage } from "../../redux/actions/flash";
+import { removeFlashMessage } from "../../redux/actions";
 
 const Index: React.FunctionComponent = () => {
   const flashes = useSelector(getFlashes);
