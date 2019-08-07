@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
-import { createRequest, updateRequest, navigate } from "../../redux/actions";
+import {
+  createRequest,
+  updateRequest,
+  navigate,
+  removeRequest
+} from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 import { INewPatient } from "../../redux/reducers/data";
 import Validator, { IErrors } from "../../lib/validator";
@@ -160,11 +165,19 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               </Button>
             </Button.Group>
           </Grid.Column>
-          <Grid.Column textAlign="right">
-            <Button negative onClick={() => dispatch(navigate("PATIENT"))}>
-              <Icon name="trash" /> Usuń
-            </Button>
-          </Grid.Column>
+          {patient && (
+            <Grid.Column textAlign="right">
+              <Button
+                negative
+                onClick={() => {
+                  dispatch(removeRequest("patients", patient));
+                  dispatch(navigate("PATIENT"));
+                }}
+              >
+                <Icon name="trash" /> Usuń
+              </Button>
+            </Grid.Column>
+          )}
         </Grid.Row>
       </Grid>
     </Form>
