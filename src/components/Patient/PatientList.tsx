@@ -30,7 +30,7 @@ const PatientList: React.FunctionComponent<{}> = () => {
     );
   }
 
-  let currentLetter: string = "";
+  let currentLetter = "";
   let ribbon: JSX.Element | null;
 
   return (

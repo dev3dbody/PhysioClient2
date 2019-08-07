@@ -1,10 +1,10 @@
 import React from "react";
 import { Input, Menu } from "semantic-ui-react";
-import { navigate } from "../redux/actions";
+import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
+import { navigate } from "../redux/actions";
 import { getScreen } from "../redux/reducers";
 import { IScreen } from "../redux/reducers/screen";
-import _ from "lodash";
 
 const Navigation: React.FunctionComponent = () => {
   const activeScreen = useSelector(getScreen);

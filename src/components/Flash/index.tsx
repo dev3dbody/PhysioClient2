@@ -1,9 +1,9 @@
 import React from "react";
 import { Icon, Message } from "semantic-ui-react";
 import { useSelector } from "react-redux";
+import { SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
 import { getFlashes } from "../../redux/reducers";
 import "./index.css";
-import { SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
 import { removeFlashMessage } from "../../redux/actions";
 
 const Index: React.FunctionComponent = () => {

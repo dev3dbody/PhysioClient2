@@ -27,6 +27,7 @@ type IData = {
 
 export default class Validator {
   private readonly schema: ISchema;
+
   constructor(schema: ISchema) {
     this.schema = schema;
   }
@@ -67,9 +68,8 @@ export default class Validator {
       return result;
     }
 
-    type IValidatorTest=(input: any)=>boolean | ITestResult
+    type IValidatorTest=(input: any) => boolean | ITestResult
 
     return (validator[test] as IValidatorTest)(value);
   }
 }
-

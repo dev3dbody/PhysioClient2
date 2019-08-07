@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
-import { createRequest, updateRequest, navigate } from "../../redux/actions";
+import _ from "lodash";
+import moment from "moment";
+
+import {
+  createRequest,
+  updateRequest,
+  navigate,
+  removeRequest
+} from "../../redux/actions";
 import { getCurrentPatient } from "../../redux/reducers";
 import { INewPatient } from "../../redux/reducers/data";
 import Validator, { IErrors } from "../../lib/validator";
 import ValidatorMessage from "../ValidatorMessage";
-import _ from "lodash";
-import moment from "moment";
 
 const PatientEdit: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
@@ -19,8 +25,8 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
     birthDate: "",
     comment: ""
   };
-  let _id: string = "";
-  let _rev: string = "";
+  let _id = "";
+  let _rev = "";
 
   if (patient !== undefined) {
     ({ _id, _rev, ...initValues } = patient);
@@ -72,6 +78,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
       }));
       return;
     }
+    // eslint-disable-next-line consistent-return
     return dispatch(
       patient === undefined
         ? createRequest("patients", fields.values)
@@ -91,7 +98,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               fluid
               label="Imię"
               placeholder="Imię"
-              onChange={(_, data) => handleChange("name", data.value)}
+              onChange={(__, data) => handleChange("name", data.value)}
             />
           </Grid.Column>
           <Grid.Column width="5">
@@ -102,7 +109,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               fluid
               label="Nazwisko"
               placeholder="Nazwisko"
-              onChange={(_, data) => handleChange("surname", data.value)}
+              onChange={(__, data) => handleChange("surname", data.value)}
             />
           </Grid.Column>
           <Grid.Column width="5">
@@ -120,7 +127,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
                 placeholder="Data urodzenia"
                 value={fields.values.birthDate}
                 iconPosition="right"
-                popupPosition={"bottom right"}
+                popupPosition="bottom right"
                 onClear={() => handleChange("birthDate", "")}
                 onChange={(e, { value, format }) => {
                   if (value) {
@@ -142,7 +149,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
             value={fields.values.comment}
             label="Inne informacje"
             placeholder="Inne informacje"
-            onChange={(_, data) => handleChange("comment", `${data.value}`)}
+            onChange={(__, data) => handleChange("comment", `${data.value}`)}
           />
         </Grid.Column>
       </Grid>
@@ -160,11 +167,19 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
               </Button>
             </Button.Group>
           </Grid.Column>
-          <Grid.Column textAlign="right">
-            <Button negative onClick={() => dispatch(navigate("PATIENT"))}>
-              <Icon name="trash" /> Usuń
-            </Button>
-          </Grid.Column>
+          {patient && (
+            <Grid.Column textAlign="right">
+              <Button
+                negative
+                onClick={() => {
+                  dispatch(removeRequest("patients", patient));
+                  dispatch(navigate("PATIENT"));
+                }}
+              >
+                <Icon name="trash" /> Usuń
+              </Button>
+            </Grid.Column>
+          )}
         </Grid.Row>
       </Grid>
     </Form>
