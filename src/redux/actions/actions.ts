@@ -30,7 +30,16 @@ export const updateSuccess = createAction('UPDATE_SUCCESS', action => (model: IM
     },
   }
 ));
-export const removeSuccess = createAction('REMOVE_SUCCESS', action => (model: IModel, id: string) => action({ model, id }));
+export const removeSuccess = createAction('REMOVE_SUCCESS', action => {
+  return (model: IModel, id: string) => action({ model, id }, {
+    flash: {
+      duration: 3000,
+      type: 'success',
+      text: 'Obiekt został usunięty',
+    },
+  });
+});
+
 export const listFailure = createAction('LIST_FAILURE', action => (model: IModel, err: object) => action({ model, err }));
 export const createFailure = createAction('CREATE_FAILURE', action => (model: IModel, err: object) => action({ model, err }));
 export const updateFailure = createAction('UPDATE_FAILURE', action => (model: IModel, err: object) => action({ model, err }));
