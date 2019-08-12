@@ -7,12 +7,12 @@ import {
   Dropdown,
   Header,
   Icon,
-  Segment,
-  Image
+  Segment
 } from "semantic-ui-react";
 import { getCurrentPatient } from "../../redux/reducers";
 import { edit, navigate } from "../../redux/actions";
 import AppointmentList from "../Appointment/AppointmentList";
+import PLYModelView from "../MeshViewer/PLYModelView";
 
 const PatientDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
@@ -47,6 +47,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
               </Button>
               <Dropdown
                 floating
+                data-cy="dropdown-button-icon"
                 onChange={() => {
                   console.info("onc");
                   dispatch(edit("patients", patient._id));
@@ -90,13 +91,18 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           <Grid.Column width={9} style={{ padding: "0 0 3em 2em" }}>
             <Header as="h4">Ostatnie badanie - 02.02.2017, 09:00</Header>
             <Segment>
-              <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+              <PLYModelView />
             </Segment>
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
-        <Icon name="arrow left" /> Wróć do listy pacjentów
+      <Button
+        data-cy="back-button"
+        onClick={() => dispatch(navigate("PATIENT"))}
+        basic
+      >
+        <Icon name="arrow left" /> Wróć
+
       </Button>
     </Container>
   );

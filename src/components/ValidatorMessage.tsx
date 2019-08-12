@@ -6,7 +6,9 @@ const ValidatorMessage = ({ errors }: { errors: IErrors }) => (
   <>
     {!!Object.keys(errors).length && (
       <Message negative>
-        <Message.Header>Formularz zawiera błędy</Message.Header>
+        <Message.Header data-cy="validation-error-message">
+          Formularz zawiera błędy
+        </Message.Header>
         <ul>
           {Object.values(errors).map(error => (
             <li>{error}</li>
