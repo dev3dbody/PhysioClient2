@@ -4,6 +4,7 @@ import { Grid, Form, Button, Icon, Header } from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
 
 import {
+  removeRequest,
   createRequest,
   updateRequest,
   navigate,
@@ -117,7 +118,13 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
             </Grid.Column>
             <Grid.Column textAlign="right">
               {appointment && (
-                <Button negative onClick={() => dispatch(navigate("PATIENT"))}>
+                <Button
+                  negative
+                  onClick={() => {
+                    dispatch(navigate("PATIENT"));
+                    dispatch(removeRequest("appointments", appointment));
+                  }}
+                >
                   <Icon name="trash" /> Usuń
                 </Button>
               )}
