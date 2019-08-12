@@ -1,14 +1,20 @@
 import { combineReducers } from 'redux';
-import screen, { IScreen } from './screen';
-import * as fromData from './data';
-import data, { IData } from './data';
-import * as fromLoading from './loading';
-import loading, { ILoading } from './loading';
-import * as fromCurrent from './current';
-import current, { ICurrent } from './current';
-import flash, { IFlash } from './flash';
 import _ from 'lodash';
 import moment from 'moment';
+import screen, { IScreen } from './screen';
+// eslint-disable-next-line import/no-duplicates
+import * as fromData from './data';
+// eslint-disable-next-line import/no-duplicates
+import data, { IData } from './data';
+// eslint-disable-next-line import/no-duplicates
+import * as fromLoading from './loading';
+// eslint-disable-next-line import/no-duplicates
+import loading, { ILoading } from './loading';
+// eslint-disable-next-line import/no-duplicates
+import * as fromCurrent from './current';
+// eslint-disable-next-line import/no-duplicates
+import current, { ICurrent } from './current';
+import flash, { IFlash } from './flash';
 
 export interface IState {
   screen: IScreen;
@@ -94,9 +100,8 @@ export const getAppointmentsWithPatients = (state: IState) => {
 
   return (currentPatientId
     ? getAppointments(state).filter(
-        ({ patientId }) => patientId === currentPatientId
-      )
-    : getAppointments(state)
+      ({ patientId }) => patientId === currentPatientId
+    ) : getAppointments(state)
   ).map(appointment => ({
     ...appointment,
     patient: getPatientById(state, appointment.patientId),

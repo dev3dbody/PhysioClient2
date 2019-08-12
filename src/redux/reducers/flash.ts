@@ -1,11 +1,11 @@
-import { IAction } from '../actions'
 import { isActionOf } from 'typesafe-actions';
 
 import {
+  IAction,
   addFlashMessage,
   removeFlashMessage,
   IFlashType,
-} from '../actions'
+} from '../actions';
 
 export interface IFlash {
   id: string;

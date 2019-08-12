@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Header, Icon, Label, Segment, Table } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 import {
   getCurrentPatient,
   getAppointmentsWithPatients
 } from "../../redux/reducers";
 import { details, listRequest } from "../../redux/actions";
-import moment from "moment";
 
 const AppointmentList: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const AppointmentList: React.FunctionComponent<{}> = () => {
     );
   }
 
-  let currentHeader: string = "";
+  let currentHeader = "";
   let ribbon: JSX.Element | null;
 
   return (

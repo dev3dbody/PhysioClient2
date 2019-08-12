@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Form, Button, Icon, Header } from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
+import moment from "moment";
 
 import {
   removeRequest,
@@ -12,7 +13,6 @@ import {
 } from "../../redux/actions";
 import { getCurrentAppointment, getCurrentPatient } from "../../redux/reducers";
 import { INewAppointment } from "../../redux/reducers/data";
-import moment from "moment";
 
 interface AppointmentEditProps {
   patientId: string;
@@ -31,8 +31,8 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
     interview: "",
     visitDate: moment().format(dateFormat)
   };
-  let _id: string = "";
-  let _rev: string = "";
+  let _id = "";
+  let _rev = "";
 
   if (appointment !== undefined) {
     ({ _id, _rev, ...initValues } = appointment);
@@ -51,13 +51,12 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
     }));
   };
 
-  const handleSubmit = async () => {
-    return dispatch(
+  const handleSubmit = async () =>
+    dispatch(
       appointment === undefined
         ? createRequest("appointments", fields.values)
         : updateRequest("appointments", { _id, _rev, ...fields.values })
     );
-  };
 
   return (
     <>
@@ -72,7 +71,7 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
       )}
       <Form>
         <Form.Field>
-          <label>Data wizty</label>
+          <label>Data wizyty</label>
           <DateTimeInput
             duration={0}
             closable
@@ -82,7 +81,7 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
             placeholder="Data wizyty"
             value={fields.values.visitDate}
             iconPosition="right"
-            popupPosition={"bottom right"}
+            popupPosition="bottom right"
             onChange={(e, { value, format }) => {
               if (value) {
                 const date = moment(value, format);

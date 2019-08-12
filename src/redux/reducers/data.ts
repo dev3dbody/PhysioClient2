@@ -55,6 +55,7 @@ const initData = {
 };
 
 const data = createReducer<IData, IAction>(initData)
+// eslint-disable-next-line no-shadow
   .handleAction(listSuccess, (state, { payload: { model, data } }) => ({
     ...state,
     [model]: {

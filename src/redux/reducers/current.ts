@@ -22,13 +22,15 @@ const initCurrent = {
 
 const current = createReducer<ICurrent, IAction>(initCurrent)
   .handleAction(navigate, (state, action) => {
+    // eslint-disable-next-line default-case
     switch (action.payload) {
       case 'ADD_PATIENT':
         return { ...state, patients: undefined };
       case 'ADD_APPOINTMENT':
         return { ...state, appointments: undefined };
+      default:
+        return { ...state };
     }
-    return { ...state };
   })
   .handleAction(edit, (state, action) => ({
     ...state,
