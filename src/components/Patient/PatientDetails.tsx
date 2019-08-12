@@ -47,6 +47,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
               </Button>
               <Dropdown
                 floating
+                data-cy="dropdown-button-icon"
                 onChange={() => {
                   console.info("onc");
                   dispatch(edit("patients", patient._id));
@@ -95,8 +96,13 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Button onClick={() => dispatch(navigate("PATIENT"))} basic>
-        <Icon name="arrow left" /> Wróć do listy pacjentów
+      <Button
+        data-cy="back-button"
+        onClick={() => dispatch(navigate("PATIENT"))}
+        basic
+      >
+        <Icon name="arrow left" /> Wróć
+
       </Button>
     </Container>
   );
