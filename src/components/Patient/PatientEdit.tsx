@@ -4,7 +4,6 @@ import { Grid, Form, Button, Icon } from "semantic-ui-react";
 import { DateInput } from "semantic-ui-calendar-react";
 import _ from "lodash";
 import moment from "moment";
-
 import {
   createRequest,
   updateRequest,
@@ -158,11 +157,18 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
         <Grid.Row columns="2">
           <Grid.Column>
             <Button.Group>
-              <Button onClick={handleSubmit} positive>
+              <Button
+                data-cy="patient-save-button"
+                onClick={handleSubmit}
+                positive
+              >
                 Zapisz
               </Button>
               <Button.Or text="lub" />
-              <Button onClick={() => dispatch(navigate("PATIENT"))}>
+              <Button
+                data-cy="patient-cancel-button"
+                onClick={() => dispatch(navigate("PATIENT"))}
+              >
                 Anuluj
               </Button>
             </Button.Group>

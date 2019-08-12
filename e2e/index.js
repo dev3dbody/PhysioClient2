@@ -1,11 +1,10 @@
 import PouchDb from "pouchdb";
-
-require("@babel/polyfill");
-
-import { beforeEach, after, before, describe, it } from "mocha";
+import { beforeEach, describe } from "mocha";
 import { Application } from "spectron";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
+
+require("@babel/polyfill");
 
 chai.should();
 chai.use(chaiAsPromised);
@@ -14,7 +13,7 @@ let $, $$, client;
 describe("e2e tests", function() {
   this.timeout(10000);
 
-  before(function() {
+  beforeEach(function() {
     this.app = new Application({
       chromeDriverArgs: process.env.CI
         ? [
@@ -32,7 +31,7 @@ describe("e2e tests", function() {
     return this.app.start();
   });
 
-  before(function() {
+  beforeEach(function() {
     chaiAsPromised.transferPromiseness = this.app.transferPromiseness;
     return this.app.client
       .waitUntilWindowLoaded()
@@ -49,7 +48,7 @@ describe("e2e tests", function() {
       .and.be.above(0);
   });
 
-  before(function(done) {
+  beforeEach(function(done) {
     this.app.client.waitUntilWindowLoaded().then(() => {
       client = this.app.client;
       $ = selector => this.app.client.$.apply(client, [selector]);
@@ -68,7 +67,7 @@ describe("e2e tests", function() {
     await this.app.client.waitUntilWindowLoaded();
   });
 
-  after(function() {
+  afterEach(function() {
     if (this.app && this.app.isRunning()) {
       return this.app.stop();
     }
