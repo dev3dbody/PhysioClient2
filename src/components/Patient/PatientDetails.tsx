@@ -29,7 +29,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           <Grid.Column>
             <Header as="h2">
               <Icon name="user circle" />
-              <Header.Content>
+              <Header.Content data-cy="patient-header-content">
                 {patient.name} {patient.surname}
                 <Header.Subheader>Szczegóły Pacjenta</Header.Subheader>
               </Header.Content>
@@ -102,7 +102,6 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
         basic
       >
         <Icon name="arrow left" /> Wróć
-
       </Button>
     </Container>
   );

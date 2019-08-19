@@ -68,10 +68,14 @@ const PatientList: React.FunctionComponent<{}> = () => {
               ribbon = null;
             }
             return (
-              <Table.Row onClick={() => dispatch(details(_id))} key={_id}>
+              <Table.Row
+                data-cy="data-name-cell"
+                onClick={() => dispatch(details(_id))}
+                key={_id}
+              >
                 <Table.Cell>
                   {ribbon}
-                  <span data-cy="data-name-cell">
+                  <span>
                     {name} {surname}
                   </span>
                 </Table.Cell>
