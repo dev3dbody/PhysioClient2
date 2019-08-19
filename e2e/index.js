@@ -1,5 +1,5 @@
 import PouchDb from "pouchdb";
-import { beforeEach, describe } from "mocha";
+import { beforeEach, describe, afterEach } from "mocha";
 import { Application } from "spectron";
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
@@ -8,7 +8,9 @@ require("@babel/polyfill");
 
 chai.should();
 chai.use(chaiAsPromised);
-let $, $$, client;
+let $;
+let $$;
+let client;
 
 describe("e2e tests", function() {
   this.timeout(10000);
@@ -71,6 +73,7 @@ describe("e2e tests", function() {
     if (this.app && this.app.isRunning()) {
       return this.app.stop();
     }
+    return null;
   });
 
   require("./patients");
@@ -85,8 +88,7 @@ const exists = async selector => {
   }
 };
 
-const wait = delayInSeconds => {
-  return new Promise(resolve => setTimeout(resolve, delayInSeconds * 1000));
-};
+const wait = delayInSeconds =>
+  new Promise(resolve => setTimeout(resolve, delayInSeconds * 1000));
 
 export { $, $$, exists, wait };

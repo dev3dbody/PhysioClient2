@@ -25,6 +25,7 @@
     "arrow-body-style": "warn",
     "implicit-arrow-linebreak": "warn",
     "@typescript-eslint/interface-name-prefix": "off",
-    "function-paren-newline": "off"
+    "function-paren-newline": "off",
+    "import/no-extraneous-dependencies": "off"
   }
 }

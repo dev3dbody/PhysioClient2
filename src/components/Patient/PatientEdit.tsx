@@ -176,6 +176,7 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
           {patient && (
             <Grid.Column textAlign="right">
               <Button
+                data-cy="patient-delete-button"
                 negative
                 onClick={() => {
                   dispatch(removeRequest("patients", patient));

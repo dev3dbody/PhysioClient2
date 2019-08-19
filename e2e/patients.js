@@ -1,9 +1,8 @@
-import { beforeEach, describe, it } from "mocha";
-import { exists, $, wait } from "./index";
+import { describe, it } from "mocha";
 import casual from "casual";
-import PouchDb from "pouchdb";
+import { exists, $, wait } from "./index";
 
-describe("patients", function() {
+describe("patients", () => {
   it("top bar navigates back to patient list (after clicking somewhere else)", async () => {
     await $('[data-cy="top-navigation-APPOINTMENT"]').click();
     await exists('[data-cy="new-patient-hero"]').should.eventually.be.false;
@@ -45,8 +44,12 @@ describe("patients", function() {
       // storing field values and setting inputs
       for (const field of fields) {
         values[field] = casual[field];
-        // Form.Input produces div with input inside
-        await $(`[data-cy="${field}"] input`).setValue(values[field]);
+        if (field === "description") {
+          await $(`[data-cy="${field}"]`).setValue(values[field]);
+        } else {
+          // Form.Input produces div with input inside
+          await $(`[data-cy="${field}"] input`).setValue(values[field]);
+        }
       }
       // wait optionally to visually check if form is filled ok
       // await wait(5);
@@ -110,7 +113,7 @@ describe("patients", function() {
         .should.eventually.equal(`${name1} ${surname1}`);
     });
   });
-  describe("patient details", () => {
+  describe.only("patient details", () => {
     it("modifies patient record visible on patient details and on patient list", async () => {
       await $('[data-cy="new-patient-hero"]').click();
       const name1 = casual.first_name;
@@ -135,7 +138,7 @@ describe("patients", function() {
         .getText()
         .should.eventually.equal(`${name1} ${surname2}`);
     });
-    it("removes patient record and redirects back to patient list without removed record", async () => {
+    it.only("removes patient record and redirects back to patient list without removed record", async () => {
       await $('[data-cy="new-patient-hero"]').click();
       const name1 = casual.first_name;
       const name2 = casual.first_name;
