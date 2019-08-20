@@ -17,6 +17,7 @@ describe("patients", () => {
     await $('[data-cy="new-patient-hero"]').click();
     const fields = ["first_name", "last_name"];
     const values = {};
+    // eslint-disable-next-line no-restricted-syntax
     for (const field of fields) {
       values[field] = casual[field];
       await $(`[data-cy="${field}"] input`).setValue(values[field]);
@@ -53,18 +54,13 @@ describe("patients", () => {
       }
       // wait optionally to visually check if form is filled ok
       // await wait(5);
-
       await $("button.positive").click();
-
-      await $("div.sub.header")
-        .getText()
-        .should.eventually.equal("Szczegóły Pacjenta");
-      await $("h2")
+      await wait(1);
+      await $('[data-cy="patient-header-content"]')
         .getText()
         .should.eventually.equal(
           `${values.first_name} ${values.last_name}\nSzczegóły Pacjenta`
         );
-
       // TODO: check if other patient detail values are matching stored values when page is ready
     });
     it("doesn't add new patient on form cancel", async () => {
@@ -94,6 +90,7 @@ describe("patients", () => {
       const name2 = casual.first_name;
       const surname1 = casual.last_name;
       const surname2 = casual.last_name;
+      const ribbon = surname1[0].toUpperCase();
 
       await $(`[data-cy="first_name"] input`).setValue(name1);
       await $(`[data-cy="last_name"] input`).setValue(surname1);
@@ -110,15 +107,16 @@ describe("patients", () => {
       await wait(1);
       await $('[data-cy="data-name-cell"]')
         .getText()
-        .should.eventually.equal(`${name1} ${surname1}`);
+        .should.eventually.equal(`${ribbon}${name1} ${surname1}`);
     });
   });
-  describe.only("patient details", () => {
+  describe("patient details", () => {
     it("modifies patient record visible on patient details and on patient list", async () => {
       await $('[data-cy="new-patient-hero"]').click();
       const name1 = casual.first_name;
       const surname1 = casual.last_name;
       const surname2 = casual.last_name;
+      const ribbon = surname2[0].toUpperCase();
 
       await $(`[data-cy="first_name"] input`).setValue(name1);
       await $(`[data-cy="last_name"] input`).setValue(surname1);
@@ -136,14 +134,15 @@ describe("patients", () => {
       await wait(1);
       await $('[data-cy="data-name-cell"]')
         .getText()
-        .should.eventually.equal(`${name1} ${surname2}`);
+        .should.eventually.equal(`${ribbon}${name1} ${surname2}`);
     });
-    it.only("removes patient record and redirects back to patient list without removed record", async () => {
+    it("removes patient record and redirects back to patient list without removed record", async () => {
       await $('[data-cy="new-patient-hero"]').click();
       const name1 = casual.first_name;
       const name2 = casual.first_name;
       const surname1 = casual.last_name;
       const surname2 = casual.last_name;
+      const ribbon = surname2[0].toUpperCase();
 
       await $(`[data-cy="first_name"] input`).setValue(name1);
       await $(`[data-cy="last_name"] input`).setValue(surname1);
@@ -158,20 +157,17 @@ describe("patients", () => {
       await wait(1);
       await $('[data-cy="back-button"]').click();
       await wait(1);
-      await $('[data-cy="data-name-cell"]')
-        .getText()
-        .should.eventually.equal(`${name1} ${surname1}`)
+      await $(`[data-cy="data-name-cell"]`)
+        .then(`${name1} ${surname1}`)
         .click();
       await wait(1);
       await $('[data-cy="dropdown-button-icon"]').click();
-      await wait(1);
       await $("div.visible.menu.transition").click();
-      await wait(1);
       await $('[data-cy="patient-delete-button"]').click();
       await wait(1);
       await $('[data-cy="data-name-cell"]')
         .getText()
-        .should.eventually.equal(`${name2} ${surname2}`);
+        .should.eventually.equal(`${ribbon}${name2} ${surname2}`);
     });
   });
 });
