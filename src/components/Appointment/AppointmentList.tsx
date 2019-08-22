@@ -19,7 +19,7 @@ const AppointmentList: React.FunctionComponent<{}> = () => {
 
   if (!appointments.length) {
     return (
-      <Segment placeholder>
+      <Segment placeholder data-cy="no-visit-yet-statement">
         <Header icon>
           <Icon name="user md" />
           Jeszcze nie zarejestrowano żadnej wizyty

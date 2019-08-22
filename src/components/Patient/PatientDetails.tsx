@@ -41,7 +41,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
               floated="right"
               onClick={() => dispatch(navigate("ADD_APPOINTMENT"))}
             >
-              <Button primary>
+              <Button primary data-cy="new-visit-button">
                 <Icon name="add to calendar" />
                 Nowa wizyta
               </Button>
