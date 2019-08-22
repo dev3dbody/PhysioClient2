@@ -42,12 +42,12 @@ const AppointmentList: React.FunctionComponent<{}> = () => {
           </Header.Content>
         </Header>
       )}
-      <Table singleLine selectable padded>
+      <Table padded selectable fixed>
         <Table.Header>
           <Table.Row>
             {!selectedPatient && <Table.HeaderCell>Pacjent</Table.HeaderCell>}
-            <Table.HeaderCell>Data i godzina wizyty</Table.HeaderCell>
-            <Table.HeaderCell>Inne informacje</Table.HeaderCell>
+            <Table.HeaderCell width={5}>Data i godzina wizyty</Table.HeaderCell>
+            <Table.HeaderCell width={7}>Inne informacje</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -69,12 +69,12 @@ const AppointmentList: React.FunctionComponent<{}> = () => {
                   key={_id}
                 >
                   {!selectedPatient && (
-                    <Table.Cell>
+                    <Table.Cell verticalAlign="top">
                       {ribbon}
                       {patient && `${patient.name} ${patient.surname}`}
                     </Table.Cell>
                   )}
-                  <Table.Cell>
+                  <Table.Cell verticalAlign="top">
                     {selectedPatient && ribbon} {visitDate}
                   </Table.Cell>
                   <Table.Cell>{interview}</Table.Cell>
