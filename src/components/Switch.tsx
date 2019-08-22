@@ -2,7 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import PatientList from "./Patient/PatientList";
 import AppointmentList from "./Appointment/AppointmentList";
-import Treatment from "./Treatment/Treatment";
+import ScanList from "./Scan/ScanList";
+import ScanDetails from "./Scan/ScanDetails";
 import PatientEdit from "./Patient/PatientEdit";
 import Scanner from "./Scanner/Scanner";
 import { getCurrentPatient, getScreen } from "../redux/reducers";
@@ -24,10 +25,12 @@ const Switch: React.FunctionComponent = () => {
       return <PatientDetails />;
     case "APPOINTMENT_DETAILS":
       return <AppointmentDetails />;
+    case "SCAN_DETAILS":
+      return <ScanDetails />;
     case "APPOINTMENT":
       return <AppointmentList />;
     case "TREATMENT":
-      return <Treatment />;
+      return <ScanList />;
     case "SCANNER":
       return <Scanner />;
     default:

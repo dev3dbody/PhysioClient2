@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
 import { getCurrentAppointment, getCurrentPatient } from "../../redux/reducers";
-import { details, edit, navigate } from "../../redux/actions";
+import { details, edit, navigate, createRequest } from "../../redux/actions";
+import Scanner from "../../lib/scanner";
 
 const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
   const appointment = useSelector(getCurrentAppointment);
   const dispatch = useDispatch();
+  const [busy, setBusy] = useState(false);
 
   if (!patient || !appointment) {
     return null;
@@ -16,7 +18,27 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
   return (
     <>
       <Button.Group floated="right">
-        <Button primary onClick={() => dispatch(navigate("ADD_APPOINTMENT"))}>
+        <Button
+          disabled={busy}
+          primary
+          onClick={() => {
+            setBusy(true);
+            // TODO: Add fake progressbar here for 15 sec.
+            Scanner.scan((error: any, data: any) => {
+              // TODO: Hide progressbar here
+              setBusy(false);
+              console.info({ mesh: data });
+              dispatch(
+                createRequest("scans", {
+                  order: 0,
+                  appointmentId: appointment._id,
+                  patientId: patient._id,
+                  mesh: data
+                })
+              );
+            });
+          }}
+        >
           <Icon name="video camera" />
           Nowe badanie
         </Button>

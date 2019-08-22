@@ -1,5 +1,6 @@
 import { Middleware } from 'redux';
 import PouchDb from 'pouchdb';
+import { getType } from 'typesafe-actions';
 
 import {
   listRequest,
@@ -18,7 +19,7 @@ import {
 } from '../actions';
 
 import { IResource, IModel, INewResource } from '../reducers/data';
-import { getType } from 'typesafe-actions';
+
 /*
 const sampleData = {
   patients: [
@@ -54,20 +55,22 @@ const db = {
   scans: new PouchDb('scans'),
 };
 
+(window as any).db = db;
+
 const database: Middleware = ({ dispatch }) => next => async (
   action: IAction,
 ) => {
   next(action);
-
   if (action.type === getType(listRequest)) {
     const { model }: { model: IModel } = action.payload;
     try {
-      let docs = await db[model].allDocs({
+      const docs = await db[model].allDocs({
+        // eslint-disable-next-line @typescript-eslint/camelcase
         include_docs: true,
         attachments: model === 'scans',
       });
 
-      let rows = (docs.rows as any).map(({ doc }: { doc: any }) => doc);
+      const rows = (docs.rows as any).map(({ doc }: { doc: any }) => doc);
 
       dispatch(
         listSuccess(
