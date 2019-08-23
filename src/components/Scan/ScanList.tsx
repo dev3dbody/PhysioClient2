@@ -3,7 +3,7 @@ import { Header, Icon, Label, Segment, Table } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCurrentPatient,
-  getScans,
+  getScansWithPatients,
   getCurrentAppointment
 } from "../../redux/reducers";
 import { details, listRequest } from "../../redux/actions";
@@ -12,7 +12,7 @@ const ScanList: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const selectedPatient = useSelector(getCurrentPatient);
   const selectedAppointment = useSelector(getCurrentAppointment);
-  const scans = useSelector(getScans);
+  const scans = useSelector(getScansWithPatients);
 
   useEffect(() => {
     dispatch(listRequest("scans"));

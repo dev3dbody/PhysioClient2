@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
-import { getCurrentAppointment, getCurrentPatient } from "../../redux/reducers";
-import { details, edit, navigate, createRequest } from "../../redux/actions";
+import {
+  getCurrentAppointment,
+  getCurrentPatient,
+  getScansWithPatients
+} from "../../redux/reducers";
+import {
+  details,
+  edit,
+  navigate,
+  createRequest,
+  listRequest
+} from "../../redux/actions";
 import Scanner from "../../lib/scanner";
 import ScanList from "../Scan/ScanList";
 
@@ -11,6 +21,11 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const appointment = useSelector(getCurrentAppointment);
   const dispatch = useDispatch();
   const [busy, setBusy] = useState(false);
+  const scans = useSelector(getScansWithPatients);
+
+  useEffect(() => {
+    dispatch(listRequest("scans"));
+  }, [dispatch]);
 
   if (!patient || !appointment) {
     return null;
@@ -28,10 +43,9 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
             Scanner.scan((error: any, data: any) => {
               // TODO: Hide progressbar here
               setBusy(false);
-              console.info({ mesh: data });
               dispatch(
                 createRequest("scans", {
-                  order: 0,
+                  order: scans.length + 1,
                   appointmentId: appointment._id,
                   patientId: patient._id,
                   mesh: data
@@ -68,9 +82,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
           <p key={key}>{line}</p>
         ))}
       </Segment>
-      <Segment>
-        <ScanList />
-      </Segment>
+      <ScanList />
       <Button onClick={() => dispatch(details(patient._id))} basic>
         <Icon name="arrow left" /> wróć do szczegółów pacjenta
       </Button>
