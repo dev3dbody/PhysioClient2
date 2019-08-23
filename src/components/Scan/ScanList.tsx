@@ -39,11 +39,11 @@ const ScanList: React.FunctionComponent<{}> = () => {
         </Table.Header>
 
         <Table.Body>
-          {scans.map(({ _id, patientId, order }) => {
+          {scans.map(({ _id, patientId, appointmentId, order }) => {
             return (
               <Table.Row
                 onClick={() => {
-                  dispatch(details(patientId, _id));
+                  dispatch(details(patientId, appointmentId, _id));
                 }}
                 key={_id}
               >

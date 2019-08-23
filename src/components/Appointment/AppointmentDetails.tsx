@@ -4,6 +4,7 @@ import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
 import { getCurrentAppointment, getCurrentPatient } from "../../redux/reducers";
 import { details, edit, navigate, createRequest } from "../../redux/actions";
 import Scanner from "../../lib/scanner";
+import ScanList from "../Scan/ScanList";
 
 const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
@@ -66,6 +67,9 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
         {appointment.interview.split("\n").map((line, key) => (
           <p key={key}>{line}</p>
         ))}
+      </Segment>
+      <Segment>
+        <ScanList />
       </Segment>
       <Button onClick={() => dispatch(details(patient._id))} basic>
         <Icon name="arrow left" /> wróć do szczegółów pacjenta
