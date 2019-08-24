@@ -24,7 +24,6 @@ const initSettings = {
   try {
     const docs = await db.allDocs();
     const existingIds = (docs.rows as any).map(({ id }: { id: string }) => id);
-    console.log('here');
     if (!Object.keys(initSettings).every(id => existingIds.includes(id))) {
       const newDocs = Object.entries(initSettings)
         .filter(([key, value]) => !existingIds.includes(key))
