@@ -13,6 +13,8 @@ import loading, { ILoading } from './loading';
 // eslint-disable-next-line import/no-duplicates
 import * as fromCurrent from './current';
 // eslint-disable-next-line import/no-duplicates
+import * as fromSetting from './settings';
+import settings, { ISettings } from './settings';
 import current, { ICurrent } from './current';
 import flash, { IFlash } from './flash';
 
@@ -22,9 +24,10 @@ export interface IState {
   loading: ILoading;
   current: ICurrent;
   flash: [IFlash];
+  settings: ISettings;
 }
 
-const reducer = combineReducers({ screen, data, loading, current, flash });
+const reducer = combineReducers({ screen, data, loading, current, flash, settings });
 export default reducer;
 
 export const getScreen = (state: IState) => state.screen;
@@ -32,7 +35,7 @@ export const getScreen = (state: IState) => state.screen;
 export const getData = (state: IState) => state.data;
 export const getPatients = (state: IState) =>
   _.sortBy(fromData.getPatients(state.data), patient =>
-    patient.surname.toLowerCase()
+    patient.surname.toLowerCase(),
   );
 export const getPatientById = (state: IState, id: string) =>
   fromData.getPatientById(state.data, id);
@@ -41,8 +44,8 @@ export const getPatientsCount = (state: IState) =>
 export const getAppointments = (state: IState) =>
   _.reverse(
     _.sortBy(fromData.getAppointments(state.data), appointment =>
-      moment(appointment.visitDate).format('X')
-    )
+      moment(appointment.visitDate).format('X'),
+    ),
   );
 export const getAppointmentById = (state: IState, id: string) =>
   fromData.getAppointmentById(state.data, id);
@@ -53,6 +56,11 @@ export const getScanById = (state: IState, id: string) =>
   fromData.getScanById(state.data, id);
 export const getScansCount = (state: IState) =>
   fromData.getScansCount(state.data);
+
+export const getSettings = (state: IState) =>
+  fromSetting.getSettings(state.settings);
+export const getSettingByKey = (state: IState) =>
+  fromSetting.getSettingByKey(state.settings);
 
 export const getLoading = (state: IState) => state.loading;
 export const getPatientsLoading = (state: IState) =>
@@ -100,8 +108,9 @@ export const getAppointmentsWithPatients = (state: IState) => {
 
   return (currentPatientId
     ? getAppointments(state).filter(
-      ({ patientId }) => patientId === currentPatientId
-    ) : getAppointments(state)
+        ({ patientId }) => patientId === currentPatientId,
+      )
+    : getAppointments(state)
   ).map(appointment => ({
     ...appointment,
     patient: getPatientById(state, appointment.patientId),
