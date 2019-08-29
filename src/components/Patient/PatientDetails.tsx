@@ -91,7 +91,7 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
           <Grid.Column width={9} style={{ padding: "0 0 3em 2em" }}>
             <Header as="h4">Ostatnie badanie - 02.02.2017, 09:00</Header>
             <Segment>
-              <PLYModelView />
+              <PLYModelView scanId="999" />
             </Segment>
           </Grid.Column>
         </Grid.Row>

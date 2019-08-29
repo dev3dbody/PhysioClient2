@@ -19,35 +19,7 @@ import {
 
 import { IResource, IModel, INewResource } from '../reducers/data';
 import { getType } from 'typesafe-actions';
-/*
-const sampleData = {
-  patients: [
-    {
-      id: 'patient-000001',
-      name: 'First',
-      surname: 'Patient',
-      birthDate: '1988-12-12',
-      comment: 'No comment for now',
-    },
-  ],
-  appointments: [
-    {
-      id: 'appointment-000001',
-      visitDate: '2019-06-15',
-      interview: 'Some interview data',
-      patientId: 'patient-000001',
-    },
-  ],
-  scans: [
-    {
-      id: 'scan-000001',
-      order: 1,
-      mesh: 'lotsadata',
-      appointmentId: 'appointment-000001',
-    },
-  ],
-};
-*/
+
 const db = {
   patients: new PouchDb('patients'),
   appointments: new PouchDb('appointments'),
@@ -64,17 +36,11 @@ const database: Middleware = ({ dispatch }) => next => async (
     try {
       let docs = await db[model].allDocs({
         include_docs: true,
-        attachments: model === 'scans',
       });
 
       let rows = (docs.rows as any).map(({ doc }: { doc: any }) => doc);
 
-      dispatch(
-        listSuccess(
-          model,
-          rows,
-        ),
-      );
+      dispatch(listSuccess(model, rows));
     } catch (err) {
       dispatch(listFailure(model, err));
     }
@@ -86,9 +52,24 @@ const database: Middleware = ({ dispatch }) => next => async (
       resource,
     }: { model: IModel; resource: INewResource } = action.payload;
 
+    const { mesh, ...resourceWithoutBlobs } = resource as any;
+
+    let { id, rev } = await db[model].post(resourceWithoutBlobs);
     try {
-      const { id, rev } = await db[model].post(resource);
-      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }));
+      console.log({done: true, id, rev});
+      if (mesh) {
+        const result = await db.scans.putAttachment(
+          id,
+          'scan.ply',
+          rev,
+          new Blob([mesh], { type: 'application/octet-stream' }),
+          'application/octet-stream', // or 'text/plain'?
+        );
+        rev = result.rev;
+      }
+      dispatch(
+        createSuccess(model, { ...resourceWithoutBlobs, _id: id, _rev: rev }),
+      );
     } catch (err) {
       dispatch(createFailure(model, err));
     }
@@ -100,9 +81,20 @@ const database: Middleware = ({ dispatch }) => next => async (
       resource,
     }: { model: IModel; resource: IResource } = action.payload;
 
+    const { mesh, ...resourceWithoutBlobs } = resource as any;
+
     try {
-      const { rev } = await db[model].put(resource);
-      dispatch(updateSuccess(model, { ...resource, _rev: rev }));
+      const { id, rev } = await db[model].put(resource);
+      if (mesh) {
+        await db.scans.putAttachment(
+          id,
+          rev,
+          'scan.ply',
+          new Blob([mesh], { type: 'application/octet-stream' }),
+          'application/octet-stream', // or 'text/plain'?
+        );
+      }
+      dispatch(updateSuccess(model, { ...resourceWithoutBlobs, _rev: rev }));
     } catch (err) {
       dispatch(updateFailure(model, err));
     }
@@ -114,6 +106,7 @@ const database: Middleware = ({ dispatch }) => next => async (
     }: { model: IModel; resource: IResource } = action.payload;
     try {
       const { id: removedId } = await db[model].remove(resource);
+      // db.scans.removeAttachment() ?
       dispatch(removeSuccess(model, removedId));
     } catch (err) {
       dispatch(removeFailure(model, err));

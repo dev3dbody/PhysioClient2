@@ -29,7 +29,7 @@ const current = createReducer<ICurrent, IAction>(initCurrent)
       case 'ADD_APPOINTMENT':
         return { ...state, appointments: undefined };
       default:
-        return { ...state };
+        return state;
     }
   })
   .handleAction(edit, (state, action) => ({

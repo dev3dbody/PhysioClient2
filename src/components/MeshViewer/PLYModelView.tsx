@@ -1,30 +1,24 @@
-import React from "react";
-import fs from "fs";
+import React, { useState, useEffect } from "react";
 import MeshViewer from "./MeshViewer";
-// import sizeof from "object-sizeof";
+import PouchDb from "pouchdb";
 
-class PLYModelView extends React.Component<{}, { data: any }> {
-  state = {
-    data: null
-  };
-
-  constructor(props: Readonly<{}>) {
-    super(props);
-    this.handleLoadModel = this.handleLoadModel.bind(this);
-  }
-
-  componentDidMount() {
-    fs.readFile("./src/models/model.ply", this.handleLoadModel);
-  }
-
-  handleLoadModel(err: any, data: { buffer: any }) {
-    this.setState({ data: data.buffer });
-    // console.log("Loaded PLY data model with size: " + sizeof(data));
-  }
-
-  render() {
-    return <MeshViewer data={this.state.data} />;
-  }
+interface PLYModelViewProps {
+  scanId: string;
 }
+
+const PLYModelView: React.FunctionComponent<PLYModelViewProps> = ({
+  scanId
+}) => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const db = new PouchDb("scans");
+      const blob = (await db.getAttachment(scanId, "scan.ply")) as any;
+      setData((await new Response(blob).arrayBuffer()) as any);
+    })();
+  }, [scanId]);
+  return <MeshViewer data={data} />;
+};
 
 export default PLYModelView;
