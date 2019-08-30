@@ -219,7 +219,7 @@ describe("appointments", () => {
     await $('[data-cy="description"]').setValue(visit);
     await $('[data-cy="visit-save-button"]').click();
     await wait(1);
-    await $("[data-cy=visit-subheader-content]")
+    await $('[data-cy="visit-subheader-content"]')
       .getText()
       .should.eventually.equal(`${values.first_name} ${values.last_name}`);
     await wait(1);
