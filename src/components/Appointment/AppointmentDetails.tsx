@@ -35,17 +35,23 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
         <Icon name="user circle" />
         <Header.Content>
           Wizyta {appointment.visitDate}
-          <Header.Subheader>
+          <Header.Subheader data-cy="visit-subheader-content">
             {patient.name} {patient.surname}
           </Header.Subheader>
         </Header.Content>
       </Header>
       <Segment>
         {appointment.interview.split("\n").map((line, key) => (
-          <p key={key}>{line}</p>
+          <p data-cy="visit-description" key={key}>
+            {line}
+          </p>
         ))}
       </Segment>
-      <Button onClick={() => dispatch(details(patient._id))} basic>
+      <Button
+        data-cy="back-to-patient-button"
+        onClick={() => dispatch(details(patient._id))}
+        basic
+      >
         <Icon name="arrow left" /> wróć do szczegółów pacjenta
       </Button>
     </>

@@ -76,7 +76,7 @@ describe("e2e tests", function() {
     return null;
   });
 
-  require("./patients");
+  require("./patients-and-appointments");
 });
 
 const exists = async selector => {

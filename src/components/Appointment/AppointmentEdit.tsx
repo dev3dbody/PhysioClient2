@@ -106,11 +106,18 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
           <Grid.Row columns="2">
             <Grid.Column>
               <Button.Group>
-                <Button onClick={handleSubmit} positive>
+                <Button
+                  data-cy="visit-save-button"
+                  onClick={handleSubmit}
+                  positive
+                >
                   Zapisz
                 </Button>
                 <Button.Or text="lub" />
-                <Button onClick={() => dispatch(details(patientId))}>
+                <Button
+                  data-cy="visit-cancel-button"
+                  onClick={() => dispatch(details(patientId))}
+                >
                   Anuluj
                 </Button>
               </Button.Group>
@@ -118,6 +125,7 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
             <Grid.Column textAlign="right">
               {appointment && (
                 <Button
+                  data-cy="visit-delete-button"
                   negative
                   onClick={() => {
                     dispatch(navigate("PATIENT"));
