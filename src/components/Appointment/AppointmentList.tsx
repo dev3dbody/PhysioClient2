@@ -77,7 +77,7 @@ const AppointmentList: React.FunctionComponent<{}> = () => {
                   <Table.Cell>
                     {selectedPatient && ribbon} {visitDate}
                   </Table.Cell>
-                  <Table.Cell>{interview}</Table.Cell>
+                  <Table.Cell data-cy="visit-interview">{interview}</Table.Cell>
                 </Table.Row>
               );
             }

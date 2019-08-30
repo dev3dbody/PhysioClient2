@@ -222,9 +222,18 @@ describe("appointments", () => {
     await $('[data-cy="visit-subheader-content"]')
       .getText()
       .should.eventually.equal(`${values.first_name} ${values.last_name}`);
+    await $('[data-cy="visit-description"]')
+      .getText()
+      .should.eventually.equal(visit);
+    await $('[data-cy="back-to-patient-button"]').click();
     await wait(1);
-    await $('[data-cy="visit-description"]').should.eventually.equal(
-      `${visit}`
-    );
+    await $('[data-cy="patient-header-content"]')
+      .getText()
+      .should.eventually.equal(
+        `${values.first_name} ${values.last_name}\nSzczegóły Pacjenta`
+      );
+    await $('[data-cy="visit-interview"]')
+      .getText()
+      .should.eventually.equal(visit);
   });
 });
