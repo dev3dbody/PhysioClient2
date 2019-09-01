@@ -198,11 +198,11 @@ describe("appointments", () => {
     await exists('[data-cy="no-visit-yet-statement"]').should.eventually.be
       .true;
   });
-  it.only("adds new visit and displays it in Patient's Details - Last Visits", async () => {
+  it("adds new visit and displays it in Patient's Details - Last Visits", async () => {
     await $('[data-cy="new-patient-hero"]').click();
     const fields = ["first_name", "last_name", "description"];
     const values = {};
-    const visit = casual.sentence;
+    const visit = casual.short_description;
 
     for (const field of fields) {
       values[field] = casual[field];
@@ -215,7 +215,6 @@ describe("appointments", () => {
     await $("button.positive").click();
     await wait(1);
     await $('[data-cy="new-visit-button"]').click();
-    await wait(1);
     await $('[data-cy="description"]').setValue(visit);
     await $('[data-cy="visit-save-button"]').click();
     await wait(1);
@@ -235,5 +234,33 @@ describe("appointments", () => {
     await $('[data-cy="visit-interview"]')
       .getText()
       .should.eventually.equal(visit);
+  });
+  it("doesn't add new visit after cancel button click", async () => {
+    await $('[data-cy="new-patient-hero"]').click();
+    const fields = ["first_name", "last_name", "description"];
+    const values = {};
+    const visit = casual.short_description;
+
+    for (const field of fields) {
+      values[field] = casual[field];
+      if (field === "description") {
+        await $(`[data-cy="${field}"]`).setValue(values[field]);
+      } else {
+        await $(`[data-cy="${field}"] input`).setValue(values[field]);
+      }
+    }
+    await $("button.positive").click();
+    await wait(1);
+    await $('[data-cy="new-visit-button"]').click();
+    await $('[data-cy="description"]').setValue(visit);
+    await $('[data-cy="visit-cancel-button"]').click();
+    await wait(1);
+    await $('[data-cy="patient-header-content"]')
+      .getText()
+      .should.eventually.equal(
+        `${values.first_name} ${values.last_name}\nSzczegóły Pacjenta`
+      );
+    await exists('[data-cy="visit-interview"]').then(visit).should.eventually.be
+      .false;
   });
 });
