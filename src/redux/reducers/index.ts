@@ -116,3 +116,16 @@ export const getAppointmentsWithPatients = (state: IState) => {
     patient: getPatientById(state, appointment.patientId),
   }));
 };
+
+export const getScansWithPatients = (state: IState) => {
+  const currentPatientId = getPatientsCurrent(state);
+
+  return (currentPatientId
+    ? _.reverse(_.sortBy(getScans(state).filter(
+      ({ patientId }) => patientId === currentPatientId
+    ), scan => scan.order)) : getScans(state)
+  ).map(scan => ({
+    ...scan,
+    patient: getPatientById(state, scan.patientId),
+  }));
+};

@@ -44,6 +44,8 @@ const screen = createReducer<IScreen, IAction>('PATIENT')
   .handleAction(navigate, (_, action) => action.payload)
   .handleAction([createSuccess, updateSuccess], (state, action) => {
     switch (action.payload.model) {
+      case 'scans':
+        return 'SCAN_DETAILS';
       case 'patients':
         return 'PATIENT_DETAILS';
       case 'appointments':
