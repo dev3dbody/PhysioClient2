@@ -10,9 +10,8 @@ import {
 import {
   details,
   edit,
-  navigate,
   createRequest,
-  listRequest
+  listRequest, loadSettingsRequest
 } from "../../redux/actions";
 import Scanner from "../../lib/scanner";
 import ScanList from "../Scan/ScanList";
@@ -27,6 +26,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
 
   useEffect(() => {
     dispatch(listRequest("scans"));
+    dispatch(loadSettingsRequest());
   }, [dispatch]);
 
   if (!patient || !appointment) {
