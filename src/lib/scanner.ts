@@ -5,7 +5,7 @@ import { ServiceClient } from "@grpc/grpc-js/build/src/make-client";
 class Scanner {
   client: ServiceClient;
 
-  constructor() {
+  constructor({ serverHost = 'localhost:50051' }: { serverHost: string | boolean }) {
     const PROTO_PATH = './third-party/PhysioProto/scanner_communication.proto';
     const packageDefinition = loadSync(
       PROTO_PATH,
@@ -18,7 +18,7 @@ class Scanner {
       });
     const helloProto = loadPackageDefinition(packageDefinition).scanner;
     // @ts-ignore
-    this.client = new helloProto.ScannerCommunication('localhost:50051',
+    this.client = new helloProto.ScannerCommunication(serverHost,
       credentials.createInsecure());
   }
 
@@ -32,4 +32,4 @@ class Scanner {
     call.on('end', () => callback(null, Buffer.concat(bufferData).buffer));
   }
 }
-export default new Scanner();
+export default Scanner;

@@ -4,7 +4,8 @@ import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
 import {
   getCurrentAppointment,
   getCurrentPatient,
-  getScansWithPatients
+  getScansWithPatients,
+  getSettingByKey
 } from "../../redux/reducers";
 import {
   details,
@@ -22,6 +23,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const [busy, setBusy] = useState(false);
   const scans = useSelector(getScansWithPatients);
+  const serverHost = useSelector(getSettingByKey)("serverHost");
 
   useEffect(() => {
     dispatch(listRequest("scans"));
@@ -39,8 +41,9 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
           primary
           onClick={() => {
             setBusy(true);
+            const scanner = new Scanner({ serverHost });
             // TODO: Add fake progressbar here for 15 sec.
-            Scanner.scan((error: any, data: any) => {
+            scanner.scan((error: any, data: any) => {
               // TODO: Hide progressbar here
               setBusy(false);
               dispatch(

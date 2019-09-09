@@ -14,7 +14,8 @@ const Navigation: React.FunctionComponent = () => {
       name: "Pacjenci",
       actions: ["PATIENT" as IScreen, "EDIT_PATIENT" as IScreen]
     },
-    { name: "Wizyty", actions: ["APPOINTMENT" as IScreen] }
+    { name: "Wizyty", actions: ["APPOINTMENT" as IScreen] },
+    { name: "Ustawienia", actions: ["SETTINGS" as IScreen] }
   ];
 
   return (
