@@ -12,6 +12,7 @@
 Initially and after avery package.json changes:
 
 ```bash
+git submodule update --init --recursive
 npm i
 ```
 
