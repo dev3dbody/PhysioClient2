@@ -9,6 +9,7 @@ import reducer from "./redux/reducers";
 import database from "./redux/middlewares/database";
 import flash from "./redux/middlewares/flash";
 import settings from "./redux/middlewares/settings";
+import logger from "./redux/middlewares/logger";
 import "moment/locale/pl";
 
 declare global {
@@ -21,7 +22,7 @@ declare global {
 const initialState = {};
 // eslint-disable-next-line no-undef
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const middlewares = [database, flash, settings];
+const middlewares = [database, flash, settings, logger];
 if (process.env.NODE_ENV !== "production") {
   // eslint-disable-next-line global-require
   middlewares.push(require("redux-immutable-state-invariant").default());

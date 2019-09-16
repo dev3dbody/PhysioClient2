@@ -1,13 +1,14 @@
 import React from "react";
-import { Input, Menu } from "semantic-ui-react";
+import { Input, Menu, Icon, Label } from "semantic-ui-react";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { navigate } from "../redux/actions";
-import { getScreen } from "../redux/reducers";
+import { getComparedScansCount, getScreen } from "../redux/reducers";
 import { IScreen } from "../redux/reducers/screen";
 
 const Navigation: React.FunctionComponent = () => {
   const activeScreen = useSelector(getScreen);
+  const comparedScansCount = useSelector(getComparedScansCount);
   const dispatch = useDispatch();
   const items = [
     {
@@ -30,6 +31,12 @@ const Navigation: React.FunctionComponent = () => {
         />
       ))}
       <Menu.Menu position="right">
+        <Menu.Item disabled={!comparedScansCount}>
+          <Icon name="table" />
+          {comparedScansCount > 0 && (
+            <Label horizontal> {comparedScansCount} </Label>
+          )}
+        </Menu.Item>
         <Menu.Item>
           <Input icon="search" placeholder="Szukaj..." />
         </Menu.Item>

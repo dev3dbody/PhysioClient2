@@ -14,9 +14,12 @@ import loading, { ILoading } from './loading';
 import * as fromCurrent from './current';
 // eslint-disable-next-line import/no-duplicates
 import * as fromSetting from './settings';
+// eslint-disable-next-line import/no-duplicates
 import settings, { ISettings } from './settings';
+// eslint-disable-next-line import/no-duplicates
 import current, { ICurrent } from './current';
 import flash, { IFlash } from './flash';
+import scanComparsion, { IScanComparsion } from './scan-comparsion';
 
 export interface IState {
   screen: IScreen;
@@ -25,9 +28,18 @@ export interface IState {
   current: ICurrent;
   flash: [IFlash];
   settings: ISettings;
+  scanComparsion: IScanComparsion;
 }
 
-const reducer = combineReducers({ screen, data, loading, current, flash, settings });
+const reducer = combineReducers({
+  screen,
+  data,
+  loading,
+  current,
+  flash,
+  settings,
+  scanComparsion
+});
 export default reducer;
 
 export const getScreen = (state: IState) => state.screen;
@@ -108,8 +120,8 @@ export const getAppointmentsWithPatients = (state: IState) => {
 
   return (currentPatientId
     ? getAppointments(state).filter(
-        ({ patientId }) => patientId === currentPatientId,
-      )
+      ({ patientId }) => patientId === currentPatientId,
+    )
     : getAppointments(state)
   ).map(appointment => ({
     ...appointment,
@@ -129,3 +141,23 @@ export const getScansWithPatients = (state: IState) => {
     patient: getPatientById(state, scan.patientId),
   }));
 };
+
+export const getComparedScans = (state: IState) => {
+  return state.scanComparsion.map(id => getScanById(state, id));
+};
+
+export const getComparedScansIds = (state: IState) => {
+  return state.scanComparsion;
+};
+
+export const getComparedScansCount = (state: IState) => {
+  return state.scanComparsion.length;
+};
+
+export const isScanCompared = (state: IState) => {
+  const currentScanId = getScansCurrent(state);
+  if (!currentScanId) {
+    return false;
+  }
+  return !!state.scanComparsion.find(foundId => foundId === currentScanId);
+}

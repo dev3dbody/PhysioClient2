@@ -9,3 +9,4 @@ export const details = createAction('DETAILS', action => (patientId: string, app
 export * from './flash';
 export * from './data';
 export * from './setting';
+export * from './scan-comparsion';
