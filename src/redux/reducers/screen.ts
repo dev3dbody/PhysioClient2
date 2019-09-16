@@ -9,6 +9,7 @@ import {
 } from '../actions';
 
 export type IScreen =
+  | 'SETTINGS'
   | 'PATIENT'
   | 'ADD_PATIENT'
   | 'EDIT_PATIENT'

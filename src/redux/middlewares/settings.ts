@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import PouchDb from 'pouchdb';
-
+import { getType } from 'typesafe-actions';
 import {
   IAction,
   loadSettingsRequest,
@@ -10,14 +10,12 @@ import {
   changeSettingSuccess,
   changeSettingFailure,
 } from '../actions';
-
 import { ISetting } from '../reducers/settings';
-import { getType } from 'typesafe-actions';
 
 const db = new PouchDb('settings');
 
 const initSettings = {
-  marqueeClock: 'yes',
+  serverHost: 'localhost:50051',
 };
 
 (async () => {
@@ -44,11 +42,12 @@ const settings: Middleware = ({ dispatch }) => next => async (
 
   if (action.type === getType(loadSettingsRequest)) {
     try {
-      let docs = await db.allDocs({
+      const docs = await db.allDocs({
+        // eslint-disable-next-line @typescript-eslint/camelcase
         include_docs: true,
       });
 
-      let rows: ISetting[] = (docs.rows as any).map(
+      const rows: ISetting[] = (docs.rows as any).map(
         ({ doc }: { doc: ISetting }) => doc,
       );
 
@@ -63,7 +62,6 @@ const settings: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { _rev } = await db.get(key);
-      console.log({ _rev });
       const setting = await db.put({
         _id: key,
         _rev,

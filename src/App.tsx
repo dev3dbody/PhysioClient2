@@ -1,10 +1,8 @@
-import React, { useEffect, CSSProperties } from "react";
+import React, { CSSProperties } from "react";
+import { useDispatch } from "react-redux";
 import Switch from "./components/Switch";
 import Navigation from "./components/Navigation";
 import Flash from "./components/Flash";
-import { useDispatch, useSelector } from "react-redux";
-import { loadSettingsRequest, changeSettingRequest } from "./redux/actions";
-import { getSettingByKey } from "./redux/reducers";
 
 const style = {
   margin: "2em"
@@ -12,11 +10,6 @@ const style = {
 
 const App: React.FunctionComponent = () => {
   const dispatch = useDispatch();
-  const marqueeClock = useSelector(getSettingByKey)("marqueeClock");
-
-  useEffect(() => {
-    dispatch(loadSettingsRequest());
-  }, [dispatch]);
 
   return (
     <>
@@ -25,14 +18,6 @@ const App: React.FunctionComponent = () => {
         <Switch />
       </div>
       <Flash />
-      {marqueeClock && (
-        <span
-          onClick={() => dispatch(changeSettingRequest("marqueeClock", ""))}
-          style={{ background: "red" }}
-        >
-          {Date()}
-        </span>
-      )}
     </>
   );
 };

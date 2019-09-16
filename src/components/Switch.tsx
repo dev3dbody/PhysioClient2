@@ -10,6 +10,7 @@ import { getCurrentPatient, getScreen } from "../redux/reducers";
 import PatientDetails from "./Patient/PatientDetails";
 import AppointmentDetails from "./Appointment/AppointmentDetails";
 import AppointmentEdit from "./Appointment/AppointmentEdit";
+import Settings from "./Settings";
 
 const Switch: React.FunctionComponent = () => {
   const screen = useSelector(getScreen);
@@ -31,6 +32,8 @@ const Switch: React.FunctionComponent = () => {
       return <AppointmentList />;
     case "TREATMENT":
       return <ScanList />;
+    case "SETTINGS":
+      return <Settings />;
     case "SCANNER":
       return <Scanner />;
     default:
