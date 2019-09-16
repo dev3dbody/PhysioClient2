@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeSettingRequest, loadSettingsRequest } from "../../redux/actions";
 import { getSettingByKey } from "../../redux/reducers";
 
-const SettingsEdit: React.FunctionComponent<{ serverHost: string | boolean }> = (
-  { serverHost }
-) => {
+const SettingsEdit: React.FunctionComponent<{
+  serverHost: string | boolean;
+}> = ({ serverHost }) => {
   const dispatch = useDispatch();
   const [fields, setFields] = useState({
     values: {
@@ -23,10 +23,18 @@ const SettingsEdit: React.FunctionComponent<{ serverHost: string | boolean }> = 
       <Form.Input
         value={fields.values.serverHost}
         fluid
-        label="Adres serwera obsługującego skanner"
+        label="Adres serwera obsługującego skaner"
         onChange={(__, { value }) => handleChange("serverHost", value)}
       />
-      <Button onClick={() => dispatch(changeSettingRequest("serverHost", fields.values.serverHost as string))} positive>
+      <Button
+        onClick={() =>
+          dispatch(
+            changeSettingRequest("serverHost", fields.values
+              .serverHost as string)
+          )
+        }
+        positive
+      >
         Zapisz
       </Button>
     </Form>
@@ -50,7 +58,7 @@ const Settings: React.FunctionComponent<{}> = () => {
           <Header.Subheader>Konfiguracja systemu</Header.Subheader>
         </Header.Content>
       </Header>
-      { serverHost && <SettingsEdit {...{ serverHost }} /> }
+      {serverHost && <SettingsEdit {...{ serverHost }} />}
     </>
   );
 };
