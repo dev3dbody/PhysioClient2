@@ -11,6 +11,7 @@ import PatientDetails from "./Patient/PatientDetails";
 import AppointmentDetails from "./Appointment/AppointmentDetails";
 import AppointmentEdit from "./Appointment/AppointmentEdit";
 import Settings from "./Settings";
+import Compare from "./Compare";
 
 const Switch: React.FunctionComponent = () => {
   const screen = useSelector(getScreen);
@@ -34,6 +35,8 @@ const Switch: React.FunctionComponent = () => {
       return <ScanList />;
     case "SETTINGS":
       return <Settings />;
+    case "COMPARE":
+      return <Compare />;
     case "SCANNER":
       return <Scanner />;
     default:

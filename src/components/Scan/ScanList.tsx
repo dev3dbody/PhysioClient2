@@ -60,24 +60,24 @@ const ScanList: React.FunctionComponent<{}> = () => {
                 <Table.Cell className="">
                   {isCompared ? (
                     <Button
-                      secondary
+                      negative
                       onClick={e => {
                         e.stopPropagation();
                         dispatch(compareRemove(_id));
                       }}
                     >
-                      <Icon name="table" />
+                      <Icon name="trash" />
                       Usuń z porównania
                     </Button>
                   ) : (
                     <Button
-                      primary
+                      positive
                       onClick={e => {
                         e.stopPropagation();
                         dispatch(compareAdd(_id));
                       }}
                     >
-                      <Icon name="table" />
+                      <Icon name="plus circle" />
                       Dodaj do porównania
                     </Button>
                   )}

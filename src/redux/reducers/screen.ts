@@ -20,6 +20,7 @@ export type IScreen =
   | 'APPOINTMENT'
   | 'ADD_APPOINTMENT'
   | 'TREATMENT'
+  | 'COMPARE'
   | 'SCANNER';
 
 const screen = createReducer<IScreen, IAction>('PATIENT')

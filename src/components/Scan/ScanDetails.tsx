@@ -31,15 +31,15 @@ const StanDetails = () => {
     <Container>
       <Button.Group floated="right">
         <Button
-          primary={!isCompared}
-          secondary={isCompared}
+          positive={!isCompared}
+          negative={isCompared}
           onClick={() => {
             dispatch(
               isCompared ? compareRemove(scan._id) : compareAdd(scan._id)
             );
           }}
         >
-          <Icon name="table" />
+          <Icon name={isCompared ? "trash" : "plus circle"} />
           {isCompared ? "Usuń z porównania" : "Dodaj do porównania"}
         </Button>
         <Dropdown
