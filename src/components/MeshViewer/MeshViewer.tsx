@@ -22,18 +22,31 @@ class MeshViewer extends React.Component<
   { toggleRotate: boolean }
 > {
   scene: THREE.Scene;
+
   loading: boolean;
+
   canvas: any;
+
   cameraTarget!: THREE.Vector3;
+
   camera!: THREE.PerspectiveCamera;
+
   renderer!: THREE.WebGLRenderer;
+
   canvasAxes: any;
+
   canvasAxesRenderer!: THREE.WebGLRenderer;
+
   canvasAxesScene!: THREE.Scene;
+
   canvasAxesCamera!: THREE.PerspectiveCamera;
+
   controls!: TrackballControls;
+
   transformControl: any;
+
   frameId!: number;
+
   mesh: any;
 
   constructor(props: Readonly<{ data: any }>) {
@@ -172,7 +185,7 @@ class MeshViewer extends React.Component<
   }
 
   updateTransformControls() {
-    const toggleRotate = this.state.toggleRotate;
+    const { toggleRotate } = this.state;
     this.transformControl.visible = toggleRotate;
     this.transformControl.enabled = toggleRotate;
   }
@@ -205,6 +218,7 @@ class MeshViewer extends React.Component<
   componentWillUnmount() {
     this.stop();
     this.canvas.removeChild(this.renderer.domElement);
+    window.removeEventListener("resize", this.onWindowResize);
   }
 
   onWindowResize = () => {
