@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import { Grid, GridColumn, Button, Header, Icon } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
@@ -10,6 +10,45 @@ const Compare: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const scans = useSelector(getComparedScans);
   const [ready, setReady] = useState(false);
+
+  const refs = scans.map(() => React.createRef<MeshViewer>());
+  const onCameraUpdate = (type: string, data: any) => {
+    if (type === "controls") {
+      refs.map(({ current }) => {
+        if (!current) {
+          return;
+        }
+        if (data.source !== current) {
+          current.camera.position.copy(data.d);
+          current.camera.quaternion.copy(data.q);
+          current.camera.scale.copy(data.s);
+        }
+      });
+    }
+
+    if (type === "changeCamera") {
+      refs.map(({ current }) => {
+        if (!current) {
+          return;
+        }
+        if (data.source !== current) {
+          current.changeCamera(data.placement, true);
+        }
+      });
+    }
+
+    if (type === "changeCameraTopBottom") {
+      refs.map(({ current }) => {
+        if (!current) {
+          return;
+        }
+        if (data.source !== current) {
+          current.changeCameraTopBottom(data.placement, true);
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     dispatch(listRequest("scans"));
   }, [dispatch]);
@@ -32,9 +71,13 @@ const Compare: React.FunctionComponent<{}> = () => {
         </Header.Content>
       </Header>
       <Grid columns="3">
-        {scans.map(scan => (
-          <GridColumn>
-            <MeshViewer data={ready && scan && scan.mesh ? scan.mesh : null} />
+        {scans.map((scan, key) => (
+          <GridColumn key={key}>
+            <MeshViewer
+              ref={refs[key]}
+              onCameraUpdate={onCameraUpdate}
+              data={ready && scan && scan.mesh ? scan.mesh : null}
+            />
             <Button
               negative
               onClick={e => {

@@ -12,7 +12,6 @@ class PLYModelView extends React.Component<{}, { data: any }> {
   }
 
   handleLoadModel = (err: any, data: { buffer: any }) => {
-    console.info({ b: data.buffer });
     this.setState({ data: data.buffer });
   };
 

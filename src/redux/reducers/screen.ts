@@ -23,7 +23,7 @@ export type IScreen =
   | 'COMPARE'
   | 'SCANNER';
 
-const screen = createReducer<IScreen, IAction>('PATIENT')
+const screen = createReducer<IScreen, IAction>('COMPARE')
   .handleAction(edit, (state, action) => {
     switch (action.payload.model) {
       case 'patients':

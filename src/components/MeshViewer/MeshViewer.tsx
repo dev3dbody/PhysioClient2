@@ -1,10 +1,11 @@
 import * as THREE from "three";
-import React from "react";
+import React, { RefObject } from "react";
 import "./style.css";
 import { Dimmer, Loader, Button } from "semantic-ui-react";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+import _ from "lodash";
 
 import {
   changeCameraKeys,
@@ -18,7 +19,7 @@ import {
 /* global window */
 
 class MeshViewer extends React.Component<
-  { data: any },
+  { ref?: RefObject<MeshViewer> | undefined; data: any; onCameraUpdate?: any },
   { toggleRotate: boolean }
 > {
   scene: THREE.Scene;
@@ -49,7 +50,13 @@ class MeshViewer extends React.Component<
 
   mesh: any;
 
-  constructor(props: Readonly<{ data: any }>) {
+  constructor(
+    props: Readonly<{
+      ref?: RefObject<MeshViewer> | undefined;
+      data: any;
+      onCameraUpdate?: any;
+    }>
+  ) {
     super(props);
 
     this.scene = new THREE.Scene();
@@ -166,6 +173,14 @@ class MeshViewer extends React.Component<
 
     this.controls = controls;
 
+    this.controls.addEventListener("change", ({ target }) => {
+      const d = new THREE.Vector3(),
+        q = new THREE.Quaternion(),
+        s = new THREE.Vector3();
+      this.camera.matrixWorld.decompose(d, q, s);
+      this.props.onCameraUpdate("controls", { d, q, s, source: this });
+    });
+
     if (!this.transformControl) {
       const transformControl = new TransformControls(
         this.camera,
@@ -258,7 +273,7 @@ class MeshViewer extends React.Component<
     this.transformControl.setMode("rotate");
   }
 
-  changeCamera(placement: string) {
+  changeCamera(placement: string, quiet: boolean = false) {
     this.resetCamera();
     this.mesh.position.y = 0.25;
     this.mesh.rotation.y = 0;
@@ -266,9 +281,19 @@ class MeshViewer extends React.Component<
     this.mesh.rotation.z = meshRotationMatrix[placement].angle;
     this.renderScene();
     this.updateAxesPosition();
+
+    if (!quiet && _.isFunction(this.props.onCameraUpdate)) {
+      this.props.onCameraUpdate("changeCamera", { source: this, placement });
+    }
   }
 
-  changeCameraTopBottom(placement: string) {
+  changeCameraTopBottom(placement: string, quiet: boolean = false) {
+    if (!quiet && _.isFunction(this.props.onCameraUpdate)) {
+      this.props.onCameraUpdate("changeCameraTopBottom", {
+        placement,
+        source: this
+      });
+    }
     this.resetCamera();
     this.mesh.position.y = 0.25;
     this.mesh.rotation.y = 0;
