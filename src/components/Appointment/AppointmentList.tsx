@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Header, Icon, Label, Segment, Table } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+
 import {
   getCurrentPatient,
   getAppointmentsWithPatients
@@ -53,34 +53,24 @@ const AppointmentList: React.FunctionComponent<{}> = () => {
 
         <Table.Body>
           {appointments.map(
-            ({ _id, interview, visitDate, patientId, patient }) => {
-              const newHeader = moment(visitDate).fromNow();
-              if (newHeader !== currentHeader) {
-                currentHeader = newHeader;
-                ribbon = <Label ribbon>{currentHeader}</Label>;
-              } else {
-                ribbon = null;
-              }
-              return (
-                <Table.Row
-                  onClick={() => {
-                    dispatch(details(patientId, _id));
-                  }}
-                  key={_id}
-                >
-                  {!selectedPatient && (
-                    <Table.Cell verticalAlign="top">
-                      {ribbon}
-                      {patient && `${patient.name} ${patient.surname}`}
-                    </Table.Cell>
-                  )}
+            ({ _id, interview, visitDate, patientId, patient }) => (
+              <Table.Row
+                onClick={() => {
+                  dispatch(details(patientId, _id));
+                }}
+                key={_id}
+              >
+                {!selectedPatient && (
                   <Table.Cell verticalAlign="top">
-                    {selectedPatient && ribbon} {visitDate}
+                    {patient && `${patient.name} ${patient.surname}`}
                   </Table.Cell>
-                  <Table.Cell>{interview}</Table.Cell>
-                </Table.Row>
-              );
-            }
+                )}
+                <Table.Cell verticalAlign="top">
+                  {selectedPatient && ribbon} {visitDate}
+                </Table.Cell>
+                <Table.Cell>{interview}</Table.Cell>
+              </Table.Row>
+            )
           )}
         </Table.Body>
       </Table>

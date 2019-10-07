@@ -49,7 +49,6 @@ const PatientDetails: React.FunctionComponent<{}> = () => {
                 floating
                 data-cy="dropdown-button-icon"
                 onChange={() => {
-                  console.info("onc");
                   dispatch(edit("patients", patient._id));
                 }}
                 className="button icon"

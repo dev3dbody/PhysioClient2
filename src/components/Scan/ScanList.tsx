@@ -42,12 +42,13 @@ const ScanList: React.FunctionComponent<{}> = () => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Nr badania</Table.HeaderCell>
+            <Table.HeaderCell>Data i godzina</Table.HeaderCell>
             <Table.HeaderCell>Porównanie</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {scans.map(({ _id, patientId, appointmentId, order }) => {
+          {scans.map(({ _id, date, patientId, appointmentId, order }) => {
             const isCompared = !!comparedScanIds.find(id => id === _id);
             return (
               <Table.Row
@@ -57,6 +58,7 @@ const ScanList: React.FunctionComponent<{}> = () => {
                 key={_id}
               >
                 <Table.Cell>{order}</Table.Cell>
+                <Table.Cell>{date}</Table.Cell>
                 <Table.Cell className="">
                   {isCompared ? (
                     <Button

@@ -59,7 +59,7 @@ const StanDetails = () => {
         <Header.Content>
           Badanie nr {scan.order}
           <Header.Subheader>
-            {patient.name} {patient.surname} z dnia {appointment.visitDate}
+            {patient.name} {patient.surname} z dnia {scan.date}
           </Header.Subheader>
         </Header.Content>
       </Header>

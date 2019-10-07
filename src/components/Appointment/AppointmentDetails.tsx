@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 import { Button, Dropdown, Header, Icon, Segment } from "semantic-ui-react";
 import {
   getCurrentAppointment,
@@ -11,7 +12,8 @@ import {
   details,
   edit,
   createRequest,
-  listRequest, loadSettingsRequest
+  listRequest,
+  loadSettingsRequest
 } from "../../redux/actions";
 import Scanner from "../../lib/scanner";
 import ScanList from "../Scan/ScanList";
@@ -51,7 +53,8 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
                   order: scans.length + 1,
                   appointmentId: appointment._id,
                   patientId: patient._id,
-                  mesh: data
+                  mesh: data,
+                  date: moment().format("YYYY-MM-DD @ HH:mm")
                 })
               );
             });

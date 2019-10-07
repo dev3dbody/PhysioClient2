@@ -39,6 +39,7 @@ interface IScan {
   mesh: string;
   appointmentId: string;
   patientId: string;
+  date: string;
 }
 
 export type IResource = IPatient | IAppointment | IScan;
