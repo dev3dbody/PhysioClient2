@@ -3,7 +3,7 @@ import { Grid, GridColumn, Button, Header, Icon } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import { getComparedScans } from "../../redux/reducers";
-import { compareRemove, listRequest } from "../../redux/actions";
+import { compareRemove, compareClear, listRequest } from "../../redux/actions";
 import MeshViewer from "../MeshViewer/MeshViewer";
 
 const Compare: React.FunctionComponent<{}> = () => {
@@ -16,6 +16,14 @@ const Compare: React.FunctionComponent<{}> = () => {
   _.defer(() => setReady(true));
   return (
     <>
+      <Button
+        data-cy="new-patient"
+        floated="right"
+        negative
+        onClick={() => dispatch(compareClear())}
+      >
+        <Icon name="trash" /> Wyczyść wszystkie
+      </Button>
       <Header as="h2">
         <Icon name="group" />
         <Header.Content>
