@@ -31,12 +31,11 @@ const Navigation: React.FunctionComponent = () => {
         />
       ))}
       <Menu.Menu position="right">
-        <Menu.Item disabled={!comparedScansCount}>
-          <Icon name="table" />
-          {comparedScansCount > 0 && (
-            <Label horizontal> {comparedScansCount} </Label>
-          )}
-        </Menu.Item>
+        <Menu.Item
+          disabled={!comparedScansCount}
+          name={`Porównaj (${comparedScansCount})`}
+          onClick={() => dispatch(navigate("COMPARE"))}
+        />
         <Menu.Item>
           <Input icon="search" placeholder="Szukaj..." />
         </Menu.Item>
