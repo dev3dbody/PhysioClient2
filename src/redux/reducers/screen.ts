@@ -5,7 +5,7 @@ import {
   createSuccess,
   edit,
   details,
-  updateSuccess,
+  updateSuccess, compareClear,
 } from '../actions';
 
 export type IScreen =
@@ -44,6 +44,7 @@ const screen = createReducer<IScreen, IAction>('PATIENT')
     return 'PATIENT_DETAILS';
   })
   .handleAction(navigate, (_, action) => action.payload)
+  .handleAction(compareClear, () => 'PATIENT')
   .handleAction([createSuccess, updateSuccess], (state, action) => {
     switch (action.payload.model) {
       case 'scans':

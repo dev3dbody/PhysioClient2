@@ -25,6 +25,7 @@ const current = createReducer<ICurrent, IAction>(initCurrent)
     // eslint-disable-next-line default-case
     switch (action.payload) {
       case 'ADD_PATIENT':
+      case 'APPOINTMENT':
         return { ...state, patients: undefined };
       case 'ADD_APPOINTMENT':
         return { ...state, appointments: undefined };
