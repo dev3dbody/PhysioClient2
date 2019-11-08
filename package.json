@@ -53,6 +53,7 @@
     "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "dist": "electron-builder --linux AppImage --mac zip --win nsis --publish always",
+    "dist-win": "electron-builder --win nsis",
     "preelectron-pack": "npm run build",
     "electron-pack": "build -mw --linux AppImage",
     "e2e-test": "mocha --require @babel/register e2e",
