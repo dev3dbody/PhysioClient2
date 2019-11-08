@@ -6,8 +6,8 @@
   "main": "public/electron.js",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "@grpc/grpc-js": "^0.5.2",
-    "@grpc/proto-loader": "^0.5.1",
+    "@grpc/grpc-js": "^0.6.11",
+    "@grpc/proto-loader": "^0.5.3",
     "@types/chai-as-promised": "^7.1.0",
     "@types/jest": "24.0.14",
     "@types/lodash": "^4.14.134",
@@ -50,7 +50,7 @@
     "build": "rescripts build",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' mocha --require ts-node/register './src/**/*.spec.ts' && CI=1 react-scripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "dist": "electron-builder --linux AppImage --mac zip --win nsis --publish always",
     "preelectron-pack": "npm run build",
@@ -97,7 +97,8 @@
     "prettier": "1.18.2",
     "spectron": "^7.0.0",
     "ts-node": "^8.3.0",
-    "wait-on": "^3.2.0"
+    "wait-on": "^3.2.0",
+    "cross-env": "6.0.3"
   },
   "build": {
     "appId": "com.physio.physio-client-2",
