@@ -1,0 +1,13 @@
+diff --git a/node_modules/@grpc/proto-loader/build/src/index.js b/node_modules/@grpc/proto-loader/build/src/index.js
+index 7abd8b0..418d91c 100644
+--- a/node_modules/@grpc/proto-loader/build/src/index.js
++++ b/node_modules/@grpc/proto-loader/build/src/index.js
+@@ -228,7 +228,7 @@ exports.loadSync = loadSync;
+     // Protobuf.js exposes: any, duration, empty, field_mask, struct, timestamp,
+     // and wrappers. compiler/plugin is excluded in Protobuf.js and here.
+     var wellKnownProtos = ['api', 'descriptor', 'source_context', 'type'];
+-    var sourceDir = path.join(path.dirname(require.resolve('protobufjs')), 'google', 'protobuf');
++    var sourceDir = path.join(path.dirname(eval("require.resolve('protobufjs')")), 'google', 'protobuf');
+     for (var _i = 0, wellKnownProtos_1 = wellKnownProtos; _i < wellKnownProtos_1.length; _i++) {
+         var proto = wellKnownProtos_1[_i];
+         var file = path.join(sourceDir, proto + ".proto");
