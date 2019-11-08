@@ -1,0 +1,13 @@
+diff --git a/node_modules/@grpc/grpc-js/build/src/subchannel-pool.js b/node_modules/@grpc/grpc-js/build/src/subchannel-pool.js
+index b5d681f..8f7e773 100644
+--- a/node_modules/@grpc/grpc-js/build/src/subchannel-pool.js
++++ b/node_modules/@grpc/grpc-js/build/src/subchannel-pool.js
+@@ -81,7 +81,7 @@ class SubchannelPool {
+                 this.unrefUnusedSubchannels();
+             }, REF_CHECK_INTERVAL);
+             // Unref because this timer should not keep the event loop running.
+-            this.cleanupTimer.unref();
++            this.cleanupTimer.unref && this.cleanupTimer.unref();
+         }
+     }
+     /**
