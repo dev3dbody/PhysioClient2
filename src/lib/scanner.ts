@@ -1,9 +1,9 @@
 import { credentials, loadPackageDefinition } from '@grpc/grpc-js';
 import { loadSync } from '@grpc/proto-loader';
-import { ServiceClient } from "@grpc/grpc-js/build/src/make-client";
 
 class Scanner {
-  client: ServiceClient;
+  clientProto: any;
+  serverHost: string;
 
   constructor({ serverHost = 'localhost:50051' }: { serverHost: string | boolean }) {
     const PROTO_PATH = './third-party/PhysioProto/scanner_communication.proto';
@@ -16,20 +16,30 @@ class Scanner {
         defaults: true,
         oneofs: true
       });
-    const helloProto = loadPackageDefinition(packageDefinition).scanner;
-    // @ts-ignore
-    this.client = new helloProto.ScannerCommunication(serverHost,
-      credentials.createInsecure());
+    this.clientProto = loadPackageDefinition(packageDefinition).scanner;
+    if (typeof serverHost === "string") {
+      this.serverHost = serverHost;
+    } else {
+      this.serverHost = 'localhost:50051'
+    }
   }
 
   scan(callback: any) {
-    const call = this.client.StartScan()
+    const client = new this.clientProto.ScannerCommunication(this.serverHost,
+      credentials.createInsecure());
+    const call = client.StartScan()
     const bufferData: Buffer[] = []
     call.on('data', (result: any) => {
       bufferData.push(Buffer.from(result.mesh));
     });
-    call.on('error', (err: any) => console.info(err));
-    call.on('end', () => callback(null, Buffer.concat(bufferData).buffer));
+    call.on('error', (err: any) => {
+      console.info(err);
+      client.close();
+    });
+    call.on('end', () => {
+      callback(null, Buffer.concat(bufferData).buffer);
+      client.close();
+    });
   }
 }
 export default Scanner;
