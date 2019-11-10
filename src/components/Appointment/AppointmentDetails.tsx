@@ -1,3 +1,4 @@
+import fs from "fs";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -25,6 +26,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const [busy, setBusy] = useState(false);
   const scans = useSelector(getScansWithPatients);
   const serverHost = useSelector(getSettingByKey)("serverHost");
+  const pathToScans = useSelector(getSettingByKey)("pathToScans");
 
   useEffect(() => {
     dispatch(listRequest("scans"));
@@ -48,14 +50,41 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
             scanner.scan((error: any, data: any) => {
               // TODO: Hide progressbar here
               setBusy(false);
+              let scanTime = moment().format("YYYY-MM-DD @ HH:mm");
+              const scanOrder = scans.length + 1;
               dispatch(
                 createRequest("scans", {
-                  order: scans.length + 1,
+                  order: scanOrder,
                   appointmentId: appointment._id,
                   patientId: patient._id,
                   mesh: data,
-                  date: moment().format("YYYY-MM-DD @ HH:mm")
+                  date: scanTime
                 })
+              );
+              // Save here on the disk
+              const dir =
+                pathToScans +
+                "/" +
+                patient.surname +
+                patient.name +
+                "_" +
+                patient._id;
+              if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+              }
+              fs.writeFile(
+                dir +
+                  "/" +
+                  patient.surname +
+                  "_" +
+                  scanTime +
+                  "_ID_" +
+                  scanOrder +
+                  ".ply",
+                new Buffer(data),
+                err => {
+                  console.log("Error writting mesh=" + err);
+                }
               );
             });
           }}
