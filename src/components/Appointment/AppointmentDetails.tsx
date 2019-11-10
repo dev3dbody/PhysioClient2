@@ -50,7 +50,9 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
             scanner.scan((error: any, data: any) => {
               // TODO: Hide progressbar here
               setBusy(false);
-              let scanTime = moment().format("YYYY-MM-DD @ HH:mm");
+              const timeNow = moment();
+              const scanTime = timeNow.format("YYYY-MM-DD @ HH:mm");
+              const scanTimeForFile = timeNow.format("YYYY_MM_DD_[at]_HH_mm");
               const scanOrder = scans.length + 1;
               dispatch(
                 createRequest("scans", {
@@ -77,11 +79,11 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
                   "/" +
                   patient.surname +
                   "_" +
-                  scanTime +
+                  scanTimeForFile +
                   "_ID_" +
                   scanOrder +
                   ".ply",
-                new Buffer(data),
+                Buffer.from(data),
                 err => {
                   console.log("Error writting mesh=" + err);
                 }
