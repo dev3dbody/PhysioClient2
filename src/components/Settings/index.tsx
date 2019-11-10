@@ -6,11 +6,13 @@ import { getSettingByKey } from "../../redux/reducers";
 
 const SettingsEdit: React.FunctionComponent<{
   serverHost: string | boolean;
-}> = ({ serverHost }) => {
+  pathToScans: string | boolean;
+}> = ({ serverHost, pathToScans }) => {
   const dispatch = useDispatch();
   const [fields, setFields] = useState({
     values: {
-      serverHost
+      serverHost,
+      pathToScans
     }
   });
   const handleChange = async (field: string, value: string) => {
@@ -26,13 +28,23 @@ const SettingsEdit: React.FunctionComponent<{
         label="Adres serwera obsługującego skaner"
         onChange={(__, { value }) => handleChange("serverHost", value)}
       />
+      <Form.Input
+        value={fields.values.pathToScans}
+        fluid
+        label="Folder na dysku przechowujący skany"
+        onChange={(__, { value }) => handleChange("pathToScans", value)}
+      />
       <Button
-        onClick={() =>
+        onClick={() => {
           dispatch(
             changeSettingRequest("serverHost", fields.values
               .serverHost as string)
-          )
-        }
+          );
+          dispatch(
+            changeSettingRequest("pathToScans", fields.values
+              .pathToScans as string)
+          );
+        }}
         positive
       >
         Zapisz
@@ -49,6 +61,7 @@ const Settings: React.FunctionComponent<{}> = () => {
   }, [dispatch]);
 
   const serverHost = useSelector(getSettingByKey)("serverHost");
+  const pathToScans = useSelector(getSettingByKey)("pathToScans");
   return (
     <>
       <Header as="h2">
@@ -58,7 +71,9 @@ const Settings: React.FunctionComponent<{}> = () => {
           <Header.Subheader>Konfiguracja systemu</Header.Subheader>
         </Header.Content>
       </Header>
-      {serverHost && <SettingsEdit {...{ serverHost }} />}
+      {serverHost && pathToScans && (
+        <SettingsEdit {...{ serverHost, pathToScans }} />
+      )}
     </>
   );
 };

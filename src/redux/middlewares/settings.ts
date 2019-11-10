@@ -16,6 +16,7 @@ const db = new PouchDb('settings');
 
 const initSettings = {
   serverHost: 'localhost:50051',
+  pathToScans: 'C:/Skany/'
 };
 
 (async () => {
