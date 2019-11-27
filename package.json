@@ -47,6 +47,7 @@
     "validator": "^11.0.0"
   },
   "scripts": {
+    "preinstall": "cd third-party/PhysioLibNativeAddon && npm install",
     "start": "rescripts start",
     "build": "rescripts build",
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' mocha --require ts-node/register './src/**/*.spec.ts' && CI=1 react-scripts test",
