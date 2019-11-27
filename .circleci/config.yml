@@ -19,8 +19,19 @@ jobs:
           command: |
             git submodule update --init --recursive --remote
       - run:
-          name: Install CMAKE
-          command: 'apt-get update && apt-get install -y cmake'
+        name: Install CMAKE
+        command: |
+          wget https://cmake.org/files/v3.13/cmake-3.13.3-Linux-x86_64.tar.gz
+          tar -xvzf cmake-3.13.3-Linux-x86_64.tar.gz
+          chmod +x ./cmake-3.13.3-Linux-x86_64/bin/ccmake
+          chmod +x ./cmake-3.13.3-Linux-x86_64/bin/cmake
+          chmod +x ./cmake-3.13.3-Linux-x86_64/bin/cpack
+          chmod +x ./cmake-3.13.3-Linux-x86_64/bin/ctest
+          DIR=$(pwd)
+          ln -s $DIR/cmake-3.13.3-Linux-x86_64/bin/ccmake /usr/bin/ccmake
+          ln -s $DIR/cmake-3.13.3-Linux-x86_64/bin/cmake /usr/bin/cmake
+          ln -s $DIR/cmake-3.13.3-Linux-x86_64/bin/cpack /usr/bin/cpack
+          ln -s $DIR/cmake-3.13.3-Linux-x86_64/bin/ctest /usr/bin/ctest
       - run:
           name: Install Dependices
           command: npm install
