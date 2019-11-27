@@ -20,7 +20,7 @@ jobs:
             git submodule update --init --recursive --remote
       - run:
           name: Install CMAKE
-          command: 'apt-get update && sudo apt-get install -y cmake'
+          command: 'apt-get update && apt-get install -y cmake'
       - run:
           name: Install Dependices
           command: npm install
