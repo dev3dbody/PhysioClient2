@@ -55,6 +55,7 @@ const db = {
   scans: new PouchDb('scans'),
 };
 
+// eslint-disable-next-line no-undef
 (window as any).db = db;
 
 const database: Middleware = ({ dispatch }) => next => async (
