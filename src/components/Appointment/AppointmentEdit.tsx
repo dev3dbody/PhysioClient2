@@ -82,9 +82,9 @@ const AppointmentEdit: React.FunctionComponent<AppointmentEditProps> = ({
             value={fields.values.visitDate}
             iconPosition="right"
             popupPosition="bottom right"
-            onChange={(e, { value, format }) => {
+            onChange={(e, { value }) => {
               if (value) {
-                const date = moment(value, format);
+                const date = moment(value, 'YYYY-MM-DD @ HH:mm');
                 if (date.isValid()) {
                   handleChange("visitDate", date.format(dateFormat));
                 } else {
