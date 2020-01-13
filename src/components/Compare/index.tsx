@@ -14,19 +14,21 @@ const Compare: React.FunctionComponent<{}> = () => {
   const refs = scans.map(() => React.createRef<MeshViewer>());
   const onCameraUpdate = (type: string, data: any) => {
     if (type === "controls") {
+      // eslint-disable-next-line array-callback-return
       refs.map(({ current }) => {
         if (!current) {
           return;
         }
         if (data.source !== current) {
-          current.camera.position.copy(data.d);
-          current.camera.quaternion.copy(data.q);
-          current.camera.scale.copy(data.s);
+          current.camera.position.copy(data.source.camera.position);
+          current.camera.quaternion.copy(data.source.camera.quaternion);
+          current.camera.scale.copy(data.source.camera.scale);
         }
       });
     }
 
     if (type === "changeCamera") {
+      // eslint-disable-next-line array-callback-return
       refs.map(({ current }) => {
         if (!current) {
           return;
@@ -38,6 +40,7 @@ const Compare: React.FunctionComponent<{}> = () => {
     }
 
     if (type === "changeCameraTopBottom") {
+      // eslint-disable-next-line array-callback-return
       refs.map(({ current }) => {
         if (!current) {
           return;

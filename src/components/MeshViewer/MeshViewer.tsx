@@ -19,8 +19,8 @@ import {
 /* global window */
 
 class MeshViewer extends React.Component<
-  { ref?: RefObject<MeshViewer> | undefined; data: any; onCameraUpdate?: any },
-  { toggleRotate: boolean }
+{ ref?: RefObject<MeshViewer> | undefined; data: any; onCameraUpdate?: any },
+{ toggleRotate: boolean }
 > {
   scene: THREE.Scene;
 
@@ -155,81 +155,6 @@ class MeshViewer extends React.Component<
     this.start();
   }
 
-  initControls() {
-    const controls = new TrackballControls(
-      this.camera,
-      this.renderer.domElement
-    );
-    controls.rotateSpeed = 2.5;
-    controls.zoomSpeed = 10;
-    controls.panSpeed = 1.2;
-    controls.noZoom = false;
-    controls.noPan = false;
-    controls.staticMoving = true;
-    controls.dynamicDampingFactor = 0.3;
-    controls.keys = [65, 83, 68];
-    controls.minDistance = 2;
-    controls.maxDistance = 10;
-
-    this.controls = controls;
-
-    this.controls.addEventListener("change", ({ target }) => {
-      const d = new THREE.Vector3(),
-        q = new THREE.Quaternion(),
-        s = new THREE.Vector3();
-      this.camera.matrixWorld.decompose(d, q, s);
-      this.props.onCameraUpdate("controls", { d, q, s, source: this });
-    });
-
-    if (!this.transformControl) {
-      const transformControl = new TransformControls(
-        this.camera,
-        this.renderer.domElement
-      );
-
-      this.scene.add(transformControl);
-      transformControl.setMode("rotate");
-
-      transformControl.addEventListener("change", () => this.renderScene);
-      transformControl.addEventListener("dragging-changed", event => {
-        this.controls.enabled = !event.value;
-      });
-
-      this.transformControl = transformControl;
-    }
-  }
-
-  updateTransformControls() {
-    const { toggleRotate } = this.state;
-    this.transformControl.visible = toggleRotate;
-    this.transformControl.enabled = toggleRotate;
-  }
-
-  addShadowedLight(
-    x: number,
-    y: number,
-    z: number,
-    color: string | number | THREE.Color | undefined,
-    intensity: number | undefined
-  ) {
-    const directionalLight = new THREE.DirectionalLight(color, intensity);
-    const d = 1;
-
-    directionalLight.position.set(x, y, z);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.camera.left = -d;
-    directionalLight.shadow.camera.right = d;
-    directionalLight.shadow.camera.top = d;
-    directionalLight.shadow.camera.bottom = -d;
-    directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 4;
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-    directionalLight.shadow.bias = -0.005;
-
-    this.scene.add(directionalLight);
-  }
-
   componentWillUnmount() {
     this.stop();
     this.canvas.removeChild(this.renderer.domElement);
@@ -242,68 +167,11 @@ class MeshViewer extends React.Component<
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
   };
 
-  start() {
-    if (!this.frameId) {
-      this.frameId = requestAnimationFrame(() => this.animate());
-    }
-  }
-
-  stop() {
-    cancelAnimationFrame(this.frameId);
-  }
-
-  updateAxesPosition() {
-    this.canvasAxesCamera.position.copy(this.camera.position);
-    this.canvasAxesCamera.position.sub(this.controls.target);
-    this.canvasAxesCamera.position.setLength(CAM_DISTANCE);
-    this.canvasAxesCamera.lookAt(this.canvasAxesScene.position);
-  }
-
-  animate() {
-    this.frameId = window.requestAnimationFrame(() => this.animate());
-    this.controls.update();
-    this.updateAxesPosition();
-    this.renderScene();
-  }
-
-  resetCamera() {
-    this.controls.reset();
-    this.cameraTarget = new THREE.Vector3(0, -0.25, 0);
-    this.camera.position.set(0, 0.15, 4);
-    this.transformControl.setMode("rotate");
-  }
-
-  changeCamera(placement: string, quiet: boolean = false) {
-    this.resetCamera();
-    this.mesh.position.y = 0.25;
-    this.mesh.rotation.y = 0;
-    this.mesh.rotation.x = -Math.PI / 2;
-    this.mesh.rotation.z = meshRotationMatrix[placement].angle;
-    this.renderScene();
-    this.updateAxesPosition();
-
-    if (!quiet && _.isFunction(this.props.onCameraUpdate)) {
-      this.props.onCameraUpdate("changeCamera", { source: this, placement });
-    }
-  }
-
-  changeCameraTopBottom(placement: string, quiet: boolean = false) {
-    if (!quiet && _.isFunction(this.props.onCameraUpdate)) {
-      this.props.onCameraUpdate("changeCameraTopBottom", {
-        placement,
-        source: this
-      });
-    }
-    this.resetCamera();
-    this.mesh.position.y = 0.25;
-    this.mesh.rotation.y = 0;
-    this.mesh.rotation.x = meshRotationMatrix[placement].angle;
-    this.renderScene();
-    this.updateAxesPosition();
-  }
-
+  // eslint-disable-next-line consistent-return
   onKeyDown = ({ keyCode }: { keyCode: number }) => {
+    // eslint-disable-next-line no-undef
     const activeElement = document.activeElement
+      // eslint-disable-next-line no-undef
       ? document.activeElement.tagName.toLowerCase()
       : null;
 
@@ -336,6 +204,143 @@ class MeshViewer extends React.Component<
     );
   };
 
+  changeCameraTopBottom(placement: string, quiet: boolean = false) {
+    const { onCameraUpdate } = this.props;
+    if (!quiet && _.isFunction(onCameraUpdate)) {
+      onCameraUpdate("changeCameraTopBottom", {
+        placement,
+        source: this
+      });
+    }
+    this.resetCamera();
+    this.mesh.position.y = 0.25;
+    this.mesh.rotation.y = 0;
+    this.mesh.rotation.x = meshRotationMatrix[placement].angle;
+    this.renderScene();
+    this.updateAxesPosition();
+  }
+
+  changeCamera(placement: string, quiet: boolean = false) {
+    this.resetCamera();
+    this.mesh.position.y = 0.25;
+    this.mesh.rotation.y = 0;
+    this.mesh.rotation.x = -Math.PI / 2;
+    this.mesh.rotation.z = meshRotationMatrix[placement].angle;
+    this.renderScene();
+    this.updateAxesPosition();
+    const { onCameraUpdate } = this.props;
+
+    if (!quiet && _.isFunction(onCameraUpdate)) {
+      onCameraUpdate("changeCamera", { source: this, placement });
+    }
+  }
+
+  resetCamera() {
+    this.controls.reset();
+    this.cameraTarget = new THREE.Vector3(0, -0.25, 0);
+    this.camera.position.set(0, 0.15, 4);
+    this.transformControl.setMode("rotate");
+  }
+
+  animate() {
+    this.frameId = window.requestAnimationFrame(() => this.animate());
+    this.controls.update();
+    this.updateAxesPosition();
+    this.renderScene();
+  }
+
+  updateAxesPosition() {
+    this.canvasAxesCamera.position.copy(this.camera.position);
+    this.canvasAxesCamera.position.sub(this.controls.target);
+    this.canvasAxesCamera.position.setLength(CAM_DISTANCE);
+    this.canvasAxesCamera.lookAt(this.canvasAxesScene.position);
+  }
+
+  stop() {
+    // eslint-disable-next-line no-undef
+    cancelAnimationFrame(this.frameId);
+  }
+
+  start() {
+    if (!this.frameId) {
+      // eslint-disable-next-line no-undef
+      this.frameId = requestAnimationFrame(() => this.animate());
+    }
+  }
+
+  addShadowedLight(
+    x: number,
+    y: number,
+    z: number,
+    color: string | number | THREE.Color | undefined,
+    intensity: number | undefined
+  ) {
+    const directionalLight = new THREE.DirectionalLight(color, intensity);
+    const d = 1;
+
+    directionalLight.position.set(x, y, z);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.camera.left = -d;
+    directionalLight.shadow.camera.right = d;
+    directionalLight.shadow.camera.top = d;
+    directionalLight.shadow.camera.bottom = -d;
+    directionalLight.shadow.camera.near = 1;
+    directionalLight.shadow.camera.far = 4;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.bias = -0.005;
+
+    this.scene.add(directionalLight);
+  }
+
+  updateTransformControls() {
+    const { toggleRotate } = this.state;
+    this.transformControl.visible = toggleRotate;
+    this.transformControl.enabled = toggleRotate;
+  }
+
+  initControls() {
+    const controls = new TrackballControls(
+      this.camera,
+      this.renderer.domElement
+    );
+    controls.rotateSpeed = 2.5;
+    controls.zoomSpeed = 10;
+    controls.panSpeed = 1.2;
+    controls.noZoom = false;
+    controls.noPan = false;
+    controls.staticMoving = true;
+    controls.dynamicDampingFactor = 0.3;
+    controls.keys = [65, 83, 68];
+    controls.minDistance = 2;
+    controls.maxDistance = 10;
+
+    this.controls = controls;
+
+    const { onCameraUpdate } = this.props;
+
+    this.controls.addEventListener("change", () => {
+      onCameraUpdate("controls", { source: this });
+    });
+
+    if (!this.transformControl) {
+      const transformControl = new TransformControls(
+        this.camera,
+        this.renderer.domElement
+      );
+
+      this.scene.add(transformControl);
+      transformControl.setMode("rotate");
+
+      transformControl.addEventListener("change", () => this.renderScene);
+      transformControl.addEventListener("dragging-changed", event => {
+        this.controls.enabled = !event.value;
+      });
+
+      this.transformControl = transformControl;
+    }
+  }
+
   renderGeometry(
     geometry: any | THREE.BufferGeometry | THREE.Geometry | undefined
   ) {
@@ -365,6 +370,7 @@ class MeshViewer extends React.Component<
 
   render() {
     const { data } = this.props;
+    const { toggleRotate } = this.state;
 
     if (data !== null && !this.mesh) {
       const loader = new PLYLoader();
@@ -424,7 +430,7 @@ class MeshViewer extends React.Component<
                 icon="sync"
                 content="Obracaj"
                 onClick={() => this.onToggleRotate()}
-                primary={this.state.toggleRotate}
+                primary={toggleRotate}
               />
             </Button.Group>
           </div>
