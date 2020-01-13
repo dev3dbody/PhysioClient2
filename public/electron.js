@@ -1,4 +1,5 @@
 const electron = require("electron");
+const windowStateKeeper = require("electron-window-state");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
@@ -8,13 +9,20 @@ const isDev = require("electron-is-dev");
 let mainWindow;
 
 function createWindow() {
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 900,
+    defaultHeight: 680
+  });
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 680,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
     webPreferences: {
       nodeIntegration: true
     }
   });
+  mainWindowState.manage(mainWindow);
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
@@ -22,10 +30,12 @@ function createWindow() {
   );
   if (isDev) {
     // Open the DevTools.
-    //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
     mainWindow.webContents.openDevTools();
   }
-  mainWindow.on("closed", () => (mainWindow = null));
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+    return null;
+  });
 }
 
 app.on("ready", createWindow);
