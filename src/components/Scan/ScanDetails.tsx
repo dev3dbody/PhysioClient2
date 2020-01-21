@@ -63,7 +63,7 @@ const StanDetails = () => {
           </Header.Subheader>
         </Header.Content>
       </Header>
-      <MeshViewer data={ready ? scan.mesh : null} />
+      <MeshViewer scanId={scan._id} />
       <Button
         onClick={() => dispatch(details(patient._id, appointment._id))}
         basic
