@@ -68,7 +68,7 @@ const database: Middleware = ({ dispatch }) => next => async (
       const docs = await db[model].allDocs({
         // eslint-disable-next-line @typescript-eslint/camelcase
         include_docs: true,
-        attachments: model === 'scans',
+        attachments: false
       });
 
       const rows = (docs.rows as any).map(({ doc }: { doc: any }) => doc);
@@ -91,8 +91,21 @@ const database: Middleware = ({ dispatch }) => next => async (
     }: { model: IModel; resource: INewResource } = action.payload;
 
     try {
-      const { id, rev } = await db[model].post(resource);
-      dispatch(createSuccess(model, { ...resource, _id: id, _rev: rev }));
+      const { mesh, ...resourceWithoutBlobs } = resource as any;
+      // eslint-disable-next-line prefer-const
+      let { id, rev } = await db[model].post(resourceWithoutBlobs);
+      if (mesh) {
+        const result = await db[model].putAttachment(
+          id,
+          'scan.ply',
+          rev,
+          // eslint-disable-next-line no-undef
+          new Blob([mesh], { type: 'application/octet-stream' }),
+          'application/octet-stream', // or 'text/plain'?
+        );
+        rev = result.rev;
+      }
+      dispatch(createSuccess(model, { ...resourceWithoutBlobs, _id: id, _rev: rev }));
     } catch (err) {
       dispatch(createFailure(model, err));
     }

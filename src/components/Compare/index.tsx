@@ -34,7 +34,7 @@ const Compare: React.FunctionComponent<{}> = () => {
       <Grid columns="3">
         {scans.map(scan => (
           <GridColumn>
-            <MeshViewer data={ready && scan && scan.mesh ? scan.mesh : null} />
+            <MeshViewer scanId={scan._id} />
             <Button
               negative
               onClick={e => {

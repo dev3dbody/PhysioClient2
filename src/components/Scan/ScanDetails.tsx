@@ -65,7 +65,7 @@ const StanDetails = () => {
           </Header.Subheader>
         </Header.Content>
       </Header>
-      <MeshViewer data={ready ? scan.mesh : null} />
+      <MeshViewer scanId={scan._id} />
       <Divider section />
       <ScanComment scan={scan} />
       <Divider section />
