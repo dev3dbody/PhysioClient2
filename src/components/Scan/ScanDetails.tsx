@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import _ from "lodash";
-import { Button, Container, Dropdown, Header, Icon } from "semantic-ui-react";
+import { Button, Container, Dropdown, Header, Icon, Divider } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
+import ScanComment from './ScanComment';
+
 import {
   getCurrentAppointment,
   getCurrentPatient,
@@ -64,6 +66,9 @@ const StanDetails = () => {
         </Header.Content>
       </Header>
       <MeshViewer scanId={scan._id} />
+      <Divider section />
+      <ScanComment scan={scan} />
+      <Divider section />
       <Button
         onClick={() => dispatch(details(patient._id, appointment._id))}
         basic

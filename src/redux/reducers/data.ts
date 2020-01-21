@@ -40,6 +40,7 @@ interface IScan {
   appointmentId: string;
   patientId: string;
   date: string;
+  comment: string;
 }
 
 export type IResource = IPatient | IAppointment | IScan;

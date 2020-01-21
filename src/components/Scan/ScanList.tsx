@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, Header, Icon, Label, Segment, Table } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
+import truncate from 'lodash/truncate';
 import {
   getCurrentPatient,
   getScansWithPatients,
@@ -14,10 +15,9 @@ import {
   listRequest
 } from "../../redux/actions";
 
+
 const ScanList: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
-  const selectedPatient = useSelector(getCurrentPatient);
-  const selectedAppointment = useSelector(getCurrentAppointment);
   const scans = useSelector(getScansWithPatients);
   const comparedScanIds = useSelector(getComparedScansIds);
 
@@ -43,12 +43,13 @@ const ScanList: React.FunctionComponent<{}> = () => {
           <Table.Row>
             <Table.HeaderCell>Nr badania</Table.HeaderCell>
             <Table.HeaderCell>Data i godzina</Table.HeaderCell>
+            <Table.HeaderCell>Notatki</Table.HeaderCell>
             <Table.HeaderCell>Porównanie</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {scans.map(({ _id, date, patientId, appointmentId, order }) => {
+          {scans.map(({ _id, date, comment, patientId, appointmentId, order }) => {
             const isCompared = !!comparedScanIds.find(id => id === _id);
             return (
               <Table.Row
@@ -59,6 +60,7 @@ const ScanList: React.FunctionComponent<{}> = () => {
               >
                 <Table.Cell>{order}</Table.Cell>
                 <Table.Cell>{date}</Table.Cell>
+                <Table.Cell>{truncate(comment, { length: 32, separator: '...' })}</Table.Cell>
                 <Table.Cell className="">
                   {isCompared ? (
                     <Button
