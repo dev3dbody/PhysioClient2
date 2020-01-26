@@ -17,7 +17,7 @@ import {
   getCurrentScan,
   isScanCompared
 } from "../../redux/reducers";
-import MeshViewer from "../MeshViewer/MeshViewer";
+import ModelViewer from "../ModelViewer";
 import {
   compareAdd,
   compareRemove,
@@ -72,7 +72,7 @@ const StanDetails = () => {
           </Header.Subheader>
         </Header.Content>
       </Header>
-      <MeshViewer scanId={scan._id} />
+      <ModelViewer scanId={scan._id} />
       <Divider section />
       <ScanComment scan={scan} />
       <Divider section />

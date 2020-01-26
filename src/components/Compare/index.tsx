@@ -4,14 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import { getComparedScans } from "../../redux/reducers";
 import { compareRemove, compareClear, listRequest } from "../../redux/actions";
-import MeshViewer from "../MeshViewer/MeshViewer";
+import ModelViewer from "../ModelViewer";
 
 const Compare: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
   const scans = useSelector(getComparedScans);
   const [ready, setReady] = useState(false);
 
-  const refs = scans.map(() => React.createRef<MeshViewer>());
+  // @ts-ignore
+  const refs = scans.map(() => React.createRef<ModelViewer>());
   const onCameraUpdate = (type: string, data: any) => {
     if (type === "controls") {
       // eslint-disable-next-line array-callback-return
@@ -76,11 +77,7 @@ const Compare: React.FunctionComponent<{}> = () => {
       <Grid columns="3">
         {scans.map((scan, key) => (
           <GridColumn key={key}>
-            <MeshViewer
-              ref={refs[key]}
-              onCameraUpdate={onCameraUpdate}
-              scanId={scan._id}
-            />
+            <ModelViewer scanId={scan._id} />
             <Button
               negative
               onClick={e => {

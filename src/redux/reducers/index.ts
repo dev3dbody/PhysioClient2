@@ -68,8 +68,6 @@ export const getScanById = (state: IState, id: string) =>
   fromData.getScanById(state.data, id);
 export const getScansCount = (state: IState) =>
   fromData.getScansCount(state.data);
-export const getLastPatientScan = (state: IState, patiendId: string) =>
-  fromData.getLastPatientScan(state.data, id);
 
 export const getSettings = (state: IState) =>
   fromSetting.getSettings(state.settings);
