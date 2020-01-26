@@ -79,7 +79,7 @@ const Compare: React.FunctionComponent<{}> = () => {
             <MeshViewer
               ref={refs[key]}
               onCameraUpdate={onCameraUpdate}
-              data={ready && scan && scan.mesh ? scan.mesh : null}
+              scanId={scan._id}
             />
             <Button
               negative

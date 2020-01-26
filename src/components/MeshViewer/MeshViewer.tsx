@@ -1,10 +1,11 @@
 import * as THREE from "three";
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 import "./style.css";
 import { Dimmer, Loader, Button } from "semantic-ui-react";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+import PouchDb from "pouchdb";
 import _ from "lodash";
 
 import {
@@ -19,8 +20,8 @@ import {
 /* global window */
 
 class MeshViewer extends React.Component<
-{ ref?: RefObject<MeshViewer> | undefined; data: any; onCameraUpdate?: any },
-{ toggleRotate: boolean }
+  { ref?: RefObject<MeshViewer> | undefined; data: any; onCameraUpdate?: any },
+  { toggleRotate: boolean }
 > {
   scene: THREE.Scene;
 
@@ -171,8 +172,8 @@ class MeshViewer extends React.Component<
   onKeyDown = ({ keyCode }: { keyCode: number }) => {
     // eslint-disable-next-line no-undef
     const activeElement = document.activeElement
-      // eslint-disable-next-line no-undef
-      ? document.activeElement.tagName.toLowerCase()
+      ? // eslint-disable-next-line no-undef
+        document.activeElement.tagName.toLowerCase()
       : null;
 
     if (!this.mesh || activeElement === "input") {
@@ -440,4 +441,23 @@ class MeshViewer extends React.Component<
   }
 }
 
-export default MeshViewer;
+interface MeshViewerPreloaderProps {
+  scanId: string;
+}
+
+const MeshViewerPreloader: React.FunctionComponent<
+  MeshViewerPreloaderProps
+> = ({ scanId }) => {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const db = new PouchDb("scans");
+      const blob = (await db.getAttachment(scanId, "scan.ply")) as any;
+      // eslint-disable-next-line no-undef
+      setData((await new Response(blob).arrayBuffer()) as any);
+    })();
+  }, [scanId]);
+  return <MeshViewer data={data} />;
+};
+
+export default MeshViewerPreloader;

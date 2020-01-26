@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, Header, Icon, Label, Segment, Table } from "semantic-ui-react";
 import { useDispatch, useSelector } from "react-redux";
+import truncate from "lodash/truncate";
 import {
   getCurrentPatient,
   getScansWithPatients,
@@ -16,8 +17,6 @@ import {
 
 const ScanList: React.FunctionComponent<{}> = () => {
   const dispatch = useDispatch();
-  const selectedPatient = useSelector(getCurrentPatient);
-  const selectedAppointment = useSelector(getCurrentAppointment);
   const scans = useSelector(getScansWithPatients);
   const comparedScanIds = useSelector(getComparedScansIds);
 
@@ -43,50 +42,56 @@ const ScanList: React.FunctionComponent<{}> = () => {
           <Table.Row>
             <Table.HeaderCell>Nr badania</Table.HeaderCell>
             <Table.HeaderCell>Data i godzina</Table.HeaderCell>
+            <Table.HeaderCell>Notatki</Table.HeaderCell>
             <Table.HeaderCell>Porównanie</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
-          {scans.map(({ _id, date, patientId, appointmentId, order }) => {
-            const isCompared = !!comparedScanIds.find(id => id === _id);
-            return (
-              <Table.Row
-                onClick={() => {
-                  dispatch(details(patientId, appointmentId, _id));
-                }}
-                key={_id}
-              >
-                <Table.Cell>{order}</Table.Cell>
-                <Table.Cell>{date}</Table.Cell>
-                <Table.Cell className="">
-                  {isCompared ? (
-                    <Button
-                      negative
-                      onClick={e => {
-                        e.stopPropagation();
-                        dispatch(compareRemove(_id));
-                      }}
-                    >
-                      <Icon name="trash" />
-                      Usuń z porównania
-                    </Button>
-                  ) : (
-                    <Button
-                      positive
-                      onClick={e => {
-                        e.stopPropagation();
-                        dispatch(compareAdd(_id));
-                      }}
-                    >
-                      <Icon name="plus circle" />
-                      Dodaj do porównania
-                    </Button>
-                  )}
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
+          {scans.map(
+            ({ _id, date, comment, patientId, appointmentId, order }) => {
+              const isCompared = !!comparedScanIds.find(id => id === _id);
+              return (
+                <Table.Row
+                  onClick={() => {
+                    dispatch(details(patientId, appointmentId, _id));
+                  }}
+                  key={_id}
+                >
+                  <Table.Cell>{order}</Table.Cell>
+                  <Table.Cell>{date}</Table.Cell>
+                  <Table.Cell>
+                    {truncate(comment, { length: 32, separator: "..." })}
+                  </Table.Cell>
+                  <Table.Cell className="">
+                    {isCompared ? (
+                      <Button
+                        negative
+                        onClick={e => {
+                          e.stopPropagation();
+                          dispatch(compareRemove(_id));
+                        }}
+                      >
+                        <Icon name="trash" />
+                        Usuń z porównania
+                      </Button>
+                    ) : (
+                      <Button
+                        positive
+                        onClick={e => {
+                          e.stopPropagation();
+                          dispatch(compareAdd(_id));
+                        }}
+                      >
+                        <Icon name="plus circle" />
+                        Dodaj do porównania
+                      </Button>
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              );
+            }
+          )}
         </Table.Body>
       </Table>
     </>

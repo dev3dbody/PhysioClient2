@@ -50,6 +50,7 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
               setBusy(false);
               dispatch(
                 createRequest("scans", {
+                  comment: "",
                   order: scans.length + 1,
                   appointmentId: appointment._id,
                   patientId: patient._id,

@@ -18,6 +18,7 @@ const initCurrent = {
   patients: undefined,
   appointments: undefined,
   scans: undefined,
+  lastScan: undefined,
 };
 
 const current = createReducer<ICurrent, IAction>(initCurrent)
