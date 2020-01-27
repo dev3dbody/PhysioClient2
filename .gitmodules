@@ -1,3 +1,6 @@
 [submodule "third-party/PhysioProto"]
 	path = third-party/PhysioProto
 	url = https://github.com/quepas/PhysioProto.git
+[submodule "third-party/PhysioLibNativeAddon"]
+	path = third-party/PhysioLibNativeAddon
+	url = https://github.com/quepas/PhysioLibNativeAddon.git

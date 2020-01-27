@@ -17,6 +17,7 @@ import {
 } from "../../redux/actions";
 import Scanner from "../../lib/scanner";
 import ScanList from "../Scan/ScanList";
+const PhysioLib = require("physio-lib");
 
 const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
@@ -48,6 +49,8 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
             scanner.scan((error: any, data: any) => {
               // TODO: Hide progressbar here
               setBusy(false);
+              console.log("Using PhysioLib " + PhysioLib.version());
+              let mirrored_mesh = PhysioLib.mirror(Buffer.from(data));
               dispatch(
                 createRequest("scans", {
                   comment: "",
