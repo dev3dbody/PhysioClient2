@@ -131,10 +131,13 @@ export const getAppointmentsWithPatients = (state: IState) => {
 
 export const getScansWithPatients = (state: IState) => {
   const currentPatientId = getPatientsCurrent(state);
+  const currentAppointmentId = getAppointmentsCurrent(state);
 
-  return (currentPatientId
+  return (currentPatientId && currentAppointmentId
     ? _.reverse(_.sortBy(getScans(state).filter(
-      ({ patientId }) => patientId === currentPatientId
+      ({ appointmentId, patientId }) => {
+        return patientId === currentPatientId && currentAppointmentId === appointmentId;
+      }
     ), scan => scan.order)) : getScans(state)
   ).map(scan => ({
     ...scan,
@@ -160,4 +163,4 @@ export const isScanCompared = (state: IState) => {
     return false;
   }
   return !!state.scanComparsion.find(foundId => foundId === currentScanId);
-}
+};
