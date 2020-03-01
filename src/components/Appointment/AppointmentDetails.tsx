@@ -17,6 +17,8 @@ import {
 } from "../../redux/actions";
 import Scanner from "../../lib/scanner";
 import ScanList from "../Scan/ScanList";
+// @ts-ignore
+import PhysioLib from "physio-lib";
 
 const AppointmentDetails: React.FunctionComponent<{}> = () => {
   const patient = useSelector(getCurrentPatient);
@@ -48,6 +50,19 @@ const AppointmentDetails: React.FunctionComponent<{}> = () => {
             scanner.scan((error: any, data: any) => {
               // TODO: Hide progressbar here
               setBusy(false);
+              // @ts-ignore
+              PhysioLib.then(Module => {
+                console.log(
+                  "Loaded PhysioLibWASM: " +
+                    Module.version() +
+                    " (inside PhysioLib: " +
+                    Module.physioLibVersion() +
+                    ")"
+                );
+                /* uncomment to perform symmetry analysis!
+                let mesh = Module.mirror(Buffer.from(data));
+                console.log('Mirror mesh size=' + mesh.length); */
+              });
               dispatch(
                 createRequest("scans", {
                   comment: "",

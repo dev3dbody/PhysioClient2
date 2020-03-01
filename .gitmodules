@@ -1,3 +1,6 @@
 [submodule "third-party/PhysioProto"]
 	path = third-party/PhysioProto
 	url = https://github.com/quepas/PhysioProto.git
+[submodule "third-party/PhysioLibWASM"]
+	path = third-party/PhysioLibWASM
+	url = https://github.com/quepas/PhysioLibWASM.git
