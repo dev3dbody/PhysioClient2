@@ -12,12 +12,12 @@ export interface ISetting {
   value: string;
 }
 
-const initData: ISettings = {
+export const initSettings: ISettings = {
   byKey: {},
   allKeys: [],
 };
 
-const settingsReducer = createReducer<ISettings, IAction>(initData)
+const settingsReducer = createReducer<ISettings, IAction>(initSettings)
   .handleAction(loadSettingsSuccess, (state, { payload: { settings } }) => ({
     ...state,
     allKeys: settings.map(({ _id }) => _id),

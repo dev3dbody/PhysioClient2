@@ -14,9 +14,9 @@ export interface IFlash {
   duration?: number;
 }
 
-const initialState: IFlash[] = [];
+export const initFlash: IFlash[] = [];
 
-const flash = (state = initialState, action: IAction) => {
+const flash = (state = initFlash, action: IAction) => {
   if (isActionOf(addFlashMessage, action)) {
     return [...state, action.payload];
   }

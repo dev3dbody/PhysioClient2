@@ -92,7 +92,7 @@ const database: Middleware = ({ dispatch }) => next => async (
 
     try {
       const { mesh, ...resourceWithoutBlobs } = resource as any;
-      // eslint-disable-next-line prefer-const
+      // tslint:disable-next-line:prefer-const
       let { id, rev } = await db[model].post(resourceWithoutBlobs);
       if (mesh) {
         const result = await db[model].putAttachment(

@@ -21,7 +21,7 @@ export interface ILoading {
   scans: boolean;
 }
 
-const initLoading = {
+export const initLoading = {
   patients: false,
   appointments: false,
   scans: false,

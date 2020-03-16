@@ -13,6 +13,7 @@ type ITestResult = {
 type ITestFunction = (value: string, data: IData) => boolean | ITestResult;
 
 type ITest = {
+  // @ts-ignore
   test: ValidatorJS.ValidatorStatic | ITestFunction;
   message: string;
 };

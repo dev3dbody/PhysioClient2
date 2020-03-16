@@ -14,7 +14,7 @@ export interface ICurrent {
   scans: string | undefined;
 }
 
-const initCurrent = {
+export const initCurrent = {
   patients: undefined,
   appointments: undefined,
   scans: undefined,
@@ -48,9 +48,11 @@ const current = createReducer<ICurrent, IAction>(initCurrent)
       ...(scanId && { scans: scanId }),
     })
   )
-  .handleAction(createSuccess, (state, { payload: { model, resource } }) => ({
+  .handleAction(
+    createSuccess,
+    (state: any, { payload }:{ payload: any}) => ({
     ...state,
-    [model]: resource._id,
+    [payload.model]: payload.resource._id,
   }))
   .handleAction(updateSuccess, (state, { payload: { model, resource } }) => ({
     ...state,

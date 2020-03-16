@@ -1,3 +1,4 @@
+// tslint:disable-next-line:class-name
 interface rotationMatrix {
   [key: string]: {
     angle: number,
@@ -5,6 +6,7 @@ interface rotationMatrix {
   }
 }
 
+// tslint:disable-next-line:class-name
 interface cameraKeys {
   [key: number]: string
 }

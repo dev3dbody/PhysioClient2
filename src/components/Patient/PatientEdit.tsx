@@ -34,19 +34,19 @@ const PatientEdit: React.FunctionComponent<{}> = () => {
   const validator = new Validator({
     name: [
       {
-        test: value => value.length > 1,
+        test: (value: string) => value.length > 1,
         message: "Imię musi mieć przynajmniej dwa znaki"
       }
     ],
     surname: [
       {
-        test: value => value.length > 1,
+        test: (value: string) => value.length > 1,
         message: "Nazwisko musi mieć przynajmniej dwa znaki"
       }
     ],
     birthDate: [
       {
-        test: value => value === "" || moment(value, "YYYY-MM-DD").isValid(),
+        test: (value: string) => value === "" || moment(value, "YYYY-MM-DD").isValid(),
         message: "Wpisz poprawną datę"
       }
     ]

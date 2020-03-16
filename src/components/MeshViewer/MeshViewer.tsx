@@ -98,8 +98,6 @@ class MeshViewer extends React.Component<
     this.renderer.setClearColor(this.scene.fog.color);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
-    this.renderer.gammaInput = true;
-    this.renderer.gammaOutput = true;
     this.renderer.shadowMap.enabled = true;
     // this.renderer.shadowMap.renderReverseSided = THREE.CullFaceBack; //@todo
 

@@ -12,7 +12,19 @@ const Index: React.FunctionComponent = () => {
     return null;
   }
 
-  const types = {
+  interface IIconType {
+    label: string;
+    icon: SemanticICONS;
+  }
+
+  interface IIconTypes {
+    info: IIconType;
+    success: IIconType;
+    error: IIconType;
+    warning: IIconType;
+  }
+
+  const types:IIconTypes = {
     info: { label: "Informacja", icon: "info" as SemanticICONS },
     success: { label: "Sukces!", icon: "check" as SemanticICONS },
     error: { label: "Błąd!", icon: "times" as SemanticICONS },
@@ -21,7 +33,7 @@ const Index: React.FunctionComponent = () => {
 
   return (
     <div className="Flash">
-      {flashes.map(({ id, type, text }) => (
+      {flashes.map(({ id, type, text }: { id: string, type: keyof IIconTypes, text: string}) => (
         <Message
           onDismiss={() => removeFlashMessage(id)}
           icon

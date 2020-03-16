@@ -51,14 +51,14 @@ export type INewScan = Omit<IScan, '_id' | '_rev'>;
 
 export type INewResource = INewPatient | INewAppointment | INewScan;
 
-const initData = {
+export const initData = {
   patients: { byId: {}, allIds: [] },
   appointments: { byId: {}, allIds: [] },
   scans: { byId: {}, allIds: [] },
 };
 
 const data = createReducer<IData, IAction>(initData)
-// eslint-disable-next-line no-shadow
+  // tslint:disable-next-line:no-shadowed-variable
   .handleAction(listSuccess, (state, { payload: { model, data } }) => ({
     ...state,
     [model]: {
